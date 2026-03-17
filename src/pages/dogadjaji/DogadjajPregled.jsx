@@ -1,27 +1,27 @@
 import { useEffect, useState } from "react"
 import DogadjajService from "../../services/dogadjaji/DogadjajService"
+
 export default function DogadjajPregled() {
 
 
     const [dogadjaji, setDogadjaji] = useState([])
 
-    useEffect(() => {
-        ucitajDogadjaje()
-    }, [])
 
     async function ucitajDogadjaje() {
-        await DogadjajService.get().then((odgovor) => {
-            setDogadjaji(odgovor.data)
-        })
+        const odgovor = await DogadjajService.get()
+        setDogadjaji(odgovor.data)
 
     }
 
+    useEffect(() => {
+        ucitajDogadjaje()
+    }, [])
 
     return (
         <>
             <ul>
                 {dogadjaji && dogadjaji.map((dogadjaj) => (
-                    <li>{dogadjaj.naziv}</li>
+                    <li key={dogadjaj.sifra}>{dogadjaj.naziv}</li>
                 ))
                 }
             </ul>

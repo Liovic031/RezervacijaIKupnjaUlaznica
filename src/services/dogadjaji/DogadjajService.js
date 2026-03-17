@@ -6,6 +6,4 @@ async function get() {
     return {data: dogadjaji}
 }
 
-export default{
-    get
-}
+export default{ get }
