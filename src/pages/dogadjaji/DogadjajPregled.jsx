@@ -3,6 +3,7 @@ import DogadjajService from "../../services/dogadjaji/DogadjajService"
 import { Table } from "react-bootstrap"
 import { NumericFormat } from "react-number-format"
 import FormatDatuma from "../../components/ForamtDatuma"
+import { GrClose, GrValidate } from "react-icons/gr"
 
 export default function DogadjajPregled() {
 
@@ -52,7 +53,7 @@ export default function DogadjajPregled() {
                                 fixedDecimalScale
                                 />
                             </td>
-                            <td>{dogadjaj.aktivan ? 'Da' : 'Ne'}</td>
+                            <td>{dogadjaj.aktivan ? <GrValidate size={25} color='green'/> : <GrClose size={25} color='red'/>}</td>
                         </tr>
                     ))}
                 </tbody>
