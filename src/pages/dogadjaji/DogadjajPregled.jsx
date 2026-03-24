@@ -10,17 +10,16 @@ import { Link } from "react-router-dom"
 export default function DogadjajPregled() {
 
     //dohvaćanje podataka
-    const [dogadjaji, setDogadjaji] = useState([])
+    const [dogadjaji, setDogadjaji] = useState([]);
 
+    
     useEffect(() => {
-        ucitajDogadjaje()
-    }, [])
-
-    async function ucitajDogadjaje() {
-        const odgovor = await DogadjajService.get()
-        setDogadjaji(odgovor.data)
-
+        async function ucitajDogadjaje() {
+        const odgovor = await DogadjajService.get();
+        setDogadjaji(odgovor.data);
     }
+        ucitajDogadjaje();
+    }, []);
     
 
 
