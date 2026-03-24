@@ -6,6 +6,7 @@ import { Container } from 'react-bootstrap'
 import Izbornik from './components/Izbornik'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
+import DogadjajNovi from './pages/dogadjaji/DogadjajNovi'
 
 function App() {
 
@@ -16,6 +17,7 @@ function App() {
       <Routes>
         <Route path={RouteNames.HOME} element={<Home />} />
         <Route path={RouteNames.DOGADJAJI} element={<DogadjajPregled />} />
+        <Route path={RouteNames.DOGADJAJI_NOVI} element={<DogadjajNovi />} />
       </Routes>
       <hr />
       &copy; Edunova
