@@ -12,15 +12,15 @@ export default function DogadjajPregled() {
     //dohvaćanje podataka
     const [dogadjaji, setDogadjaji] = useState([]);
 
-    
+
     useEffect(() => {
         async function ucitajDogadjaje() {
-        const odgovor = await DogadjajService.get();
-        setDogadjaji(odgovor.data);
-    }
+            const odgovor = await DogadjajService.get();
+            setDogadjaji(odgovor.data);
+        }
         ucitajDogadjaje();
     }, []);
-    
+
 
 
     return (
@@ -42,7 +42,7 @@ export default function DogadjajPregled() {
                     </tr>
                 </thead>
                 <tbody>
-                    {dogadjaji && dogadjaji.map((dogadjaj)=>(
+                    {dogadjaji && dogadjaji.map((dogadjaj) => (
                         <tr key={dogadjaj.sifra}>
                             <td>{dogadjaj.naziv}</td>
                             <td>{dogadjaj.lokacija}</td>
@@ -50,17 +50,17 @@ export default function DogadjajPregled() {
                             <td>{dogadjaj.dostupnoMjesta}</td>
                             <td>{dogadjaj.brojMjesta}</td>
                             <td>
-                                <NumericFormat 
-                                value={dogadjaj.cijena}
-                                displayType={'text'}
-                                thousandSeparator='.'
-                                decimalSeparator=','
-                                suffix={' €'}
-                                decimalScale={2}
-                                fixedDecimalScale
+                                <NumericFormat
+                                    value={dogadjaj.cijena}
+                                    displayType={'text'}
+                                    thousandSeparator='.'
+                                    decimalSeparator=','
+                                    suffix={' €'}
+                                    decimalScale={2}
+                                    fixedDecimalScale
                                 />
                             </td>
-                            <td>{dogadjaj.aktivan ? <GrValidate size={25} color='green'/> : <GrClose size={25} color='red'/>}</td>
+                            <td>{dogadjaj.aktivan ? <GrValidate size={25} color='green' /> : <GrClose size={25} color='red' />}</td>
                         </tr>
                     ))}
                 </tbody>
