@@ -1,13 +1,15 @@
 import { useEffect, useState } from "react"
 import DogadjajService from "../../services/dogadjaji/DogadjajService"
-import { Table } from "react-bootstrap"
+import { Button, Table } from "react-bootstrap"
 import { NumericFormat } from "react-number-format"
 import FormatDatuma from "../../components/ForamtDatuma"
 import { GrClose, GrValidate } from "react-icons/gr"
 import { RouteNames } from "../../constants"
-import { Link } from "react-router-dom"
+import { Link, useNavigate } from "react-router-dom"
 
 export default function DogadjajPregled() {
+
+    const navigate = useNavigate();
 
     //dohvaćanje podataka
     const [dogadjaji, setDogadjaji] = useState([]);
@@ -39,6 +41,7 @@ export default function DogadjajPregled() {
                         <th>Ukupno mjesta</th>
                         <th>Cijena</th>
                         <th>Aktivan</th>
+                        <th>Akcija</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -61,6 +64,9 @@ export default function DogadjajPregled() {
                                 />
                             </td>
                             <td>{dogadjaj.aktivan ? <GrValidate size={25} color='green' /> : <GrClose size={25} color='red' />}</td>
+                            <td>
+                                <Button onClick={()=>{navigate(`/dogadjaji/${dogadjaj.sifra}`)}}>Promjena</Button>
+                            </td>
                         </tr>
                     ))}
                 </tbody>

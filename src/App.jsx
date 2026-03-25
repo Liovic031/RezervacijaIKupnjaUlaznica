@@ -7,6 +7,8 @@ import Izbornik from './components/Izbornik'
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './App.css'
 import DogadjajNovi from './pages/dogadjaji/DogadjajNovi'
+import DogadjajPromjena from './pages/dogadjaji/DogadjajPromjena'
+
 
 function App() {
 
@@ -18,6 +20,7 @@ function App() {
         <Route path={RouteNames.HOME} element={<Home />} />
         <Route path={RouteNames.DOGADJAJI} element={<DogadjajPregled />} />
         <Route path={RouteNames.DOGADJAJI_NOVI} element={<DogadjajNovi />} />
+        <Route path={RouteNames.DOGADJAJI_PROMJENA} element={<DogadjajPromjena />}/>
       </Routes>
       <hr />
       &copy; Edunova

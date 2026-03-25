@@ -3,6 +3,7 @@ export const IME_APLIKACIJE = 'Event Booking APP'
 export const RouteNames = {
     HOME: '/',
     DOGADJAJI: '/dogadjaji',
-    DOGADJAJI_NOVI: '/dogadjaji/novi'
+    DOGADJAJI_NOVI: '/dogadjaji/novi',
+    DOGADJAJI_PROMJENA: '/dogadjaji/:sifra'
     // ovo je ruta
 }
