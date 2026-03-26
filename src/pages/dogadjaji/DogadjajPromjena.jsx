@@ -25,10 +25,8 @@ export default function DogadjajPromjena(){
         ucitajDogadjaj()
     },[])
 
-
-
     async function promjeni(dogadjaj){
-        await DogadjajService.promjeni(dogadjaj).then(()=>{
+        await DogadjajService.promjeni(params.sifra, dogadjaj).then(()=>{
             navigate(RouteNames.DOGADJAJI)
         })
     }
@@ -48,6 +46,7 @@ export default function DogadjajPromjena(){
     }
 
 
+    
     return(
         <>
         <h3>Unos novog događaja</h3>

@@ -3,11 +3,11 @@ import { dogadjaji } from "./DogadjajPodaci";
 
 // 1/4 Read od CRUD
 async function get() {
-    return {data: dogadjaji}
+    return {data: [...dogadjaji]} // kopija dogadjaja
 }
 
 async function getBySifra(sifra) {
-    return {data: dogadjaji.find(s => s.sifra === parseInt(sifra))}
+    return {data: dogadjaji.find(d => d.sifra === parseInt(sifra))}
 }
 
 // 2/4 Create of CRUD
