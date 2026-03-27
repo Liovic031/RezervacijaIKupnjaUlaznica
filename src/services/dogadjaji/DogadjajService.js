@@ -27,4 +27,10 @@ function nadiIndex(sifra){
     return dogadjaji.findIndex(d => d.sifra === parseInt(sifra))
 }
 
-export default{ get, dodaj, getBySifra, promjeni }
+// 4/4 Delete of CRUD
+async function obrisi(sifra) {
+    const index = nadiIndex(sifra)
+    dogadjaji.splice(index,1)  
+}
+
+export default{ get, dodaj, getBySifra, promjeni, obrisi }
