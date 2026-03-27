@@ -23,7 +23,7 @@ function App() {
         <Route path={RouteNames.DOGADJAJI_PROMJENA} element={<DogadjajPromjena />}/>
       </Routes>
       <hr />
-      &copy; Edunova
+      <div className='footer'>&copy; Event Booking APP</div>
     </Container>
   )
 }

@@ -1,4 +1,5 @@
 import { IME_APLIKACIJE } from "../constants";
+import events from "../assets/events.png"
 
 export default function Home(){
     return(
@@ -6,7 +7,7 @@ export default function Home(){
 
         <h1>Dobrodošli na {IME_APLIKACIJE}</h1>
         <div>
-            Stranica za kupnju ulaznica
+            <img src={events} alt="events" style={{width: "100%", borderRadius: "20px"}}/>
         </div>
 
     </>
