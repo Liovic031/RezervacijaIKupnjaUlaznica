@@ -15,19 +15,23 @@ export default function DogadjajPregled() {
     const [dogadjaji, setDogadjaji] = useState([]);
 
     async function ucitajDogadjaje() {
-            const odgovor = await DogadjajService.get();
-            setDogadjaji(odgovor.data);
+        const odgovor = await DogadjajService.get();
+        if (!odgovor.success) {
+            alert('Nije implementiran servis');
+            return
         }
+        setDogadjaji(odgovor.data);
+    }
 
     useEffect(() => {
-        
+
         ucitajDogadjaje();
     }, []);
 
-    
+
     //brisanje podataka
     async function obrisi(sifra) {
-        if(!confirm('sigurno obrisati')){
+        if (!confirm('sigurno obrisati')) {
             return
         }
         await DogadjajService.obrisi(sifra)
@@ -75,9 +79,9 @@ export default function DogadjajPregled() {
                             </td>
                             <td>{dogadjaj.aktivan ? <GrValidate size={25} color='green' /> : <GrClose size={25} color='red' />}</td>
                             <td>
-                                <Button onClick={()=>{navigate(`/dogadjaji/${dogadjaj.sifra}`)}}>Promjena</Button>
+                                <Button onClick={() => { navigate(`/dogadjaji/${dogadjaj.sifra}`) }}>Promjena</Button>
                                 &nbsp;&nbsp;
-                                <Button variant="danger" onClick={()=>{obrisi(dogadjaj.sifra)}}>Obriši</Button>
+                                <Button variant="danger" onClick={() => { obrisi(dogadjaj.sifra) }}>Obriši</Button>
                             </td>
                         </tr>
                     ))}

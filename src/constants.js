@@ -7,3 +7,6 @@ export const RouteNames = {
     DOGADJAJI_PROMJENA: '/dogadjaji/:sifra'
     // ovo je ruta
 }
+
+// memorija, localstorage, firebase
+export const DATA_SOURCE = 'localstorage';
