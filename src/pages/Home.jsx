@@ -1,7 +1,7 @@
 import React from "react";
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { IME_APLIKACIJE } from "../constants";
-import events from "../assets/events.png";
+import events from "../assets/event.avif";
 import ticketAnimation from "../assets/animations/ticketblue.lottie";
 
 export default function Home() {
