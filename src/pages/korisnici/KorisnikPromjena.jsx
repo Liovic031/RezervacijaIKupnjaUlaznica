@@ -41,7 +41,6 @@ export default function KorisnikPromjena() {
             ime: podaci.get("ime"),
             prezime: podaci.get("prezime"),
             email: podaci.get("email"),
-            lozinka: podaci.get("lozinka")
         });
     }
 
@@ -63,11 +62,6 @@ export default function KorisnikPromjena() {
                 <Form.Group controlId="email">
                     <Form.Label>Email</Form.Label>
                     <Form.Control type="email" name="email" defaultValue={korisnik.email} />
-                </Form.Group>
-
-                <Form.Group controlId="lozinka">
-                    <Form.Label>Lozinka</Form.Label>
-                    <Form.Control type="password" name="lozinka" defaultValue={korisnik.lozinka} />
                 </Form.Group>
 
                 <hr style={{ marginTop: "30px", border: "0" }} />

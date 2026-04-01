@@ -21,7 +21,6 @@ export default function KorisnikNovi() {
             ime: podaci.get("ime"),
             prezime: podaci.get("prezime"),
             email: podaci.get("email"),
-            lozinka: podaci.get("lozinka"),
             datumKreiranja: new Date().toISOString()
         });
     }
@@ -44,11 +43,6 @@ export default function KorisnikNovi() {
                 <Form.Group controlId="email">
                     <Form.Label>Email</Form.Label>
                     <Form.Control type="email" name="email" required />
-                </Form.Group>
-
-                <Form.Group controlId="lozinka">
-                    <Form.Label>Lozinka</Form.Label>
-                    <Form.Control type="password" name="lozinka" required />
                 </Form.Group>
 
                 <hr style={{ marginTop: "30px", border: "0" }} />
