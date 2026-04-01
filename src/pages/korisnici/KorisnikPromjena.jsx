@@ -37,6 +37,33 @@ export default function KorisnikPromjena() {
         e.preventDefault();
         const podaci = new FormData(e.target);
 
+        // --- Kontrole ---
+        if (!podaci.get("ime")?.trim()) {
+            alert("Ime je obavezno!");
+            return;
+        }
+        if (podaci.get("ime").trim().length < 2) {
+            alert("Ime mora imati najmanje 2 znaka!");
+            return;
+        }
+        if (!podaci.get("prezime")?.trim()) {
+            alert("Prezime je obavezno!");
+            return;
+        }
+        if (podaci.get("prezime").trim().length < 2) {
+            alert("Prezime mora imati najmanje 2 znaka!");
+            return;
+        }
+        if (!podaci.get("email")?.trim()) {
+            alert("Email je obavezan!");
+            return;
+        }
+        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+        if (!emailRegex.test(podaci.get("email"))) {
+            alert("Email nije u ispravnom formatu!");
+            return;
+        }
+
         promjeni({
             ime: podaci.get("ime"),
             prezime: podaci.get("prezime"),
