@@ -4,7 +4,10 @@ export const RouteNames = {
     HOME: '/',
     DOGADJAJI: '/dogadjaji',
     DOGADJAJI_NOVI: '/dogadjaji/novi',
-    DOGADJAJI_PROMJENA: '/dogadjaji/:sifra'
+    DOGADJAJI_PROMJENA: '/dogadjaji/:sifra',
+    KORISNICI: '/korisnici',
+    KORISNICI_NOVI: '/korisnici/novi',
+    KORISNICI_PROMJENA: '/korisnici/:sifra'
     // ovo je ruta
 }
 

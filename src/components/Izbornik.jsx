@@ -13,6 +13,7 @@ export default function Izbornik() {
                 <Nav className="me-auto">
                     <Nav.Link onClick={() => navigate(RouteNames.HOME)}>Home</Nav.Link>
                     <Nav.Link onClick={() => navigate(RouteNames.DOGADJAJI)}>Događaji</Nav.Link>
+                    <Nav.Link onClick={() => navigate(RouteNames.KORISNICI)}>Korisnici</Nav.Link>
                 </Nav>
             </Container>
         </Navbar>
