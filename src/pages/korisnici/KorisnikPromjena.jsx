@@ -1,4 +1,4 @@
-import { Button, Col, Form, Row } from "react-bootstrap";
+import { Button, Col, Form, Row, Card, Container } from "react-bootstrap";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KorisnikService from "../../services/korisnici/KorisnikService";
@@ -72,39 +72,62 @@ export default function KorisnikPromjena() {
     }
 
     return (
-        <>
-            <h3>Promjena korisnika</h3>
+       <>
+            <h3 className="mb-4">Promjena korisnika</h3>
 
             <Form onSubmit={odradiSubmit}>
-                <Form.Group controlId="ime">
-                    <Form.Label>Ime</Form.Label>
-                    <Form.Control type="text" name="ime" required defaultValue={korisnik.ime} />
-                </Form.Group>
+                <Container>
+                    <Card className="p-3">
+                        <Card.Body>
+                            <Row>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="ime">
+                                        <Form.Label>Ime</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="ime"
+                                            required
+                                            defaultValue={korisnik.ime}
+                                        />
+                                    </Form.Group>
 
-                <Form.Group controlId="prezime">
-                    <Form.Label>Prezime</Form.Label>
-                    <Form.Control type="text" name="prezime" required defaultValue={korisnik.prezime} />
-                </Form.Group>
+                                    <Form.Group className="mb-3" controlId="prezime">
+                                        <Form.Label>Prezime</Form.Label>
+                                        <Form.Control
+                                            type="text"
+                                            name="prezime"
+                                            required
+                                            defaultValue={korisnik.prezime}
+                                        />
+                                    </Form.Group>
+                                </Col>
 
-                <Form.Group controlId="email">
-                    <Form.Label>Email</Form.Label>
-                    <Form.Control type="email" name="email" defaultValue={korisnik.email} />
-                </Form.Group>
+                                <Col md={6}>
+                                    <Form.Group className="mb-3" controlId="email">
+                                        <Form.Label>Email</Form.Label>
+                                        <Form.Control
+                                            type="email"
+                                            name="email"
+                                            defaultValue={korisnik.email}
+                                        />
+                                    </Form.Group>
+                                </Col>
+                            </Row>
 
-                <hr style={{ marginTop: "30px", border: "0" }} />
+                            <hr />
 
-                <Row>
-                    <Col>
-                        <Link to={RouteNames.KORISNICI} className="btn btn-danger">
-                            Odustani
-                        </Link>
-                    </Col>
-                    <Col>
-                        <Button type="submit" variant="success">
-                            Promijeni
-                        </Button>
-                    </Col>
-                </Row>
+                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <Link to={RouteNames.KORISNICI} className="btn btn-danger px-4">
+                                    Odustani
+                                </Link>
+
+                                <Button type="submit" variant="success" className="px-4">
+                                    Spremi promjene
+                                </Button>
+                            </div>
+                        </Card.Body>
+                    </Card>
+                </Container>
             </Form>
         </>
     );
