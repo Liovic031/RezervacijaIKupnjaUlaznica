@@ -17,4 +17,4 @@ export const RouteNames = {
 }
 
 // memorija, localstorage, firebase
-export const DATA_SOURCE = 'memorija';
+export const DATA_SOURCE = 'localstorage';
