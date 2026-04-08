@@ -3,11 +3,50 @@
 }
 h1{
   text-align: center;
-  margin: 20px 0px;
+}
+.pocetna p{
+  margin-top: 50px;
 }
 img{
+  margin-top: 70px;
   margin-bottom: 20px;
 }
 .footer{
   text-align: center;
+}
+
+.pocetna {
+  background-image: url('assets/event.avif');
+  min-height: 500px;
+  background-color: rgba(0,0,0,0.45);
+  background-blend-mode: multiply;
+  background-size: cover;
+  background-position: center;
+
+  padding: 100px 0;
+  color: white;
+  text-align: center;
+}
+
+.statistikaPanel {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  transform: translateY(0);
+  transition: transform 0.3s ease;
+  width: 300px;
+
+}
+
+.statistikaTekst{
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+  text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+}
+
+.statistika-red {
+  display: flex;
+  gap: 30px;
+  justify-content: center;
+  margin: 20px 0;
+  flex-wrap: wrap;
 }
