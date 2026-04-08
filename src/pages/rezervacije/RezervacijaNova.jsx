@@ -52,6 +52,7 @@ export default function RezervacijaNova() {
             dogadjajSifra: parseInt(podaci.get("dogadjaj")),
             datumRezervacije: new Date().toISOString()
         });
+        
     }
 
     return (

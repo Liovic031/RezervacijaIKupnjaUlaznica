@@ -99,6 +99,19 @@ export default function RezervacijaPregled() {
                             <FormatDatuma datum={rez.datumRezervacije} />
                         </div>
 
+                        <div>
+                            <strong>Slobodna mjesta:</strong>{" "}
+                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
+                            ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).dostupnoMjesta}` : "Nepoznato"
+                            }
+                        </div>
+                        <div>
+                            <strong>Slobodna mjesta:</strong>{" "}
+                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
+                            ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
+                            }
+                        </div>
+
                         <div className="mt-3 d-flex gap-2">
                             <Button onClick={() => navigate(`/rezervacije/${rez.sifra}`)}>Promjena</Button>
                             <Button variant="danger" onClick={() => obrisi(rez.sifra)}>Obriši</Button>
