@@ -47,6 +47,32 @@ export default function RezervacijaPregled() {
         ucitajRezervacije();
     }
 
+    function getSeatBoxes(dogadjaj, rezervacije) {
+        if (!dogadjaj) return;
+
+        const ukupno = dogadjaj.brojMjesta;
+        const zauzeto = rezervacije.filter(r => r.dogadjajSifra === dogadjaj.sifra).length;
+
+        const items = [];
+
+        for (let i = 0; i < ukupno; i++) {
+            items.push(
+                <div
+                    key={i}
+                    style={{
+                        width: "14px",
+                        height: "14px",
+                        backgroundColor: i < zauzeto ? "red" : "lightgreen",
+                        border: "1px solid #888",
+                        borderRadius: "2px"
+                    }}
+                />
+            );
+        }
+
+        return items;
+    }
+
 
     return (
         <>
@@ -99,16 +125,21 @@ export default function RezervacijaPregled() {
                             <FormatDatuma datum={rez.datumRezervacije} />
                         </div>
 
-                        <div>
-                            <strong>Slobodna mjesta:</strong>{" "}
-                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
-                            ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).dostupnoMjesta}` : "Nepoznato"
-                            }
+                        <div className="mt-3">
+                            <strong>Kapacitet:</strong>
+
+                            <div className="d-flex gap-1 mt-1 flex-wrap">
+                                {getSeatBoxes(
+                                    dogadjaji.find(d => d.sifra === rez.dogadjajSifra),
+                                    rezervacije
+                                )}
+                            </div>
                         </div>
+
                         <div>
-                            <strong>Slobodna mjesta:</strong>{" "}
+                            <strong>Broj mjesta:</strong>{" "}
                             {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
-                            ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
+                                ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
                             }
                         </div>
 

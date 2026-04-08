@@ -51,8 +51,7 @@ export default function DogadjajPregled() {
                         <th>Naziv</th>
                         <th>Lokacija</th>
                         <th>Datum</th>
-                        <th>Slobodna mjesta</th>
-                        <th>Ukupno mjesta</th>
+                        <th>Broj mjesta</th>
                         <th>Cijena</th>
                         <th>Aktivan</th>
                         <th>Akcija</th>
@@ -64,7 +63,6 @@ export default function DogadjajPregled() {
                             <td>{dogadjaj.naziv}</td>
                             <td>{dogadjaj.lokacija}</td>
                             <td><FormatDatuma datum={dogadjaj.datumOdrzavanja} /></td>
-                            <td>{dogadjaj.dostupnoMjesta}</td>
                             <td>{dogadjaj.brojMjesta}</td>
                             <td>
                                 <NumericFormat

@@ -70,16 +70,6 @@ export default function DogadjajPromjena() {
             return;
         }
 
-        if (!podaci.get("dostupnoMjesta") || parseInt(podaci.get("dostupnoMjesta")) < 0) {
-            alert("Dostupna mjesta ne mogu biti negativna!");
-            return;
-        }
-
-        if (parseInt(podaci.get("dostupnoMjesta")) > parseInt(podaci.get("brojMjesta"))) {
-            alert("Dostupna mjesta ne mogu biti veća od ukupnog broja mjesta!");
-            return;
-        }
-
         if (!podaci.get("cijena") || parseFloat(podaci.get("cijena")) < 0) {
             alert("Cijena mora biti 0 ili više!");
             return;
@@ -89,7 +79,6 @@ export default function DogadjajPromjena() {
             naziv: podaci.get('naziv'),
             lokacija: podaci.get('lokacija'),
             datumOdrzavanja: new Date(podaci.get('datumOdrzavanja')).toISOString(),
-            dostupnoMjesta: parseInt(podaci.get('dostupnoMjesta')),
             brojMjesta: parseInt(podaci.get('brojMjesta')),
             cijena: parseFloat(podaci.get('cijena')),
             aktivan: podaci.get('aktivan') === 'on'
@@ -145,16 +134,6 @@ export default function DogadjajPromjena() {
                                             name="brojMjesta"
                                             step={1}
                                             defaultValue={dogadjaj.brojMjesta}
-                                        />
-                                    </Form.Group>
-
-                                    <Form.Group className="mb-3" controlId="dostupnoMjesta">
-                                        <Form.Label>Dostupno mjesta</Form.Label>
-                                        <Form.Control
-                                            type="number"
-                                            name="dostupnoMjesta"
-                                            step={1}
-                                            defaultValue={dogadjaj.dostupnoMjesta}
                                         />
                                     </Form.Group>
 

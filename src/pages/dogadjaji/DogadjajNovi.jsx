@@ -64,7 +64,6 @@ export default function DogadjajNovi() {
             naziv: podaci.get('naziv'),
             lokacija: podaci.get('lokacija'),
             datumOdrzavanja: new Date(podaci.get('datumOdrzavanja')).toISOString(),
-            dostupnoMjesta: parseInt(podaci.get('dostupnoMjesta')),
             brojMjesta: parseInt(podaci.get('brojMjesta')),
             cijena: parseFloat(podaci.get('cijena')),
             aktivan: podaci.get('aktivan') === 'on'
@@ -102,11 +101,6 @@ export default function DogadjajNovi() {
                                     <Form.Group className="mb-3" controlId="brojMjesta">
                                         <Form.Label>Broj mjesta</Form.Label>
                                         <Form.Control type="number" name="brojMjesta" />
-                                    </Form.Group>
-
-                                    <Form.Group className="mb-3" controlId="dostupnoMjesta">
-                                        <Form.Label>Dostupno mjesta</Form.Label>
-                                        <Form.Control type="number" step={1} name="dostupnoMjesta" />
                                     </Form.Group>
 
                                     <Form.Group className="mb-3" controlId="cijena">
