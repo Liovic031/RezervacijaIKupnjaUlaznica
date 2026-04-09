@@ -66,6 +66,7 @@ export default function RezervacijaPregled() {
                         border: "1px solid #888",
                         borderRadius: "2px"
                     }}
+                    title={i < zauzeto ? "Zauzeto mjesto" : "Slobodno mjesto"}
                 />
             );
         }

@@ -45,16 +45,6 @@ export default function DogadjajNovi() {
             return;
         }
 
-        if (!podaci.get("dostupnoMjesta") || parseInt(podaci.get("dostupnoMjesta")) < 0) {
-            alert("Dostupna mjesta ne mogu biti negativna!");
-            return;
-        }
-
-        if (parseInt(podaci.get("dostupnoMjesta")) > parseInt(podaci.get("brojMjesta"))) {
-            alert("Dostupna mjesta ne mogu biti veća od ukupnog broja mjesta!");
-            return;
-        }
-
         if (!podaci.get("cijena") || parseFloat(podaci.get("cijena")) < 0) {
             alert("Cijena mora biti 0 ili više!");
             return;
@@ -93,7 +83,12 @@ export default function DogadjajNovi() {
 
                                     <Form.Group className="mb-3" controlId="datumOdrzavanja">
                                         <Form.Label>Datum održavanja</Form.Label>
-                                        <Form.Control type="date" name="datumOdrzavanja" />
+                                        <Form.Control
+                                            type="date" 
+                                            name="datumOdrzavanja"
+                                            onClick={(e) => e.target.showPicker()} 
+                                            onFocus={(e) => e.target.showPicker()}
+                                            />
                                     </Form.Group>
                                 </Col>
 

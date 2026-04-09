@@ -122,6 +122,8 @@ export default function DogadjajPromjena() {
                                             type="date"
                                             name="datumOdrzavanja"
                                             defaultValue={dogadjaj.datumOdrzavanja}
+                                            onClick={(e) => e.target.showPicker()} 
+                                            onFocus={(e) => e.target.showPicker()}
                                         />
                                     </Form.Group>
                                 </Col>
