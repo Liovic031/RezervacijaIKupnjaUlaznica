@@ -51,7 +51,10 @@ export default function RezervacijaPregled() {
         if (!dogadjaj) return;
 
         const ukupno = dogadjaj.brojMjesta;
-        const zauzeto = rezervacije.filter(r => r.dogadjajSifra === dogadjaj.sifra).length;
+
+        const zauzeto = rezervacije
+            .filter(r => r.dogadjajSifra === dogadjaj.sifra)
+            .reduce((sum, r) => sum + (r.brojKarata || 1), 0);
 
         const items = [];
 
@@ -126,22 +129,21 @@ export default function RezervacijaPregled() {
                             <FormatDatuma datum={rez.datumRezervacije} />
                         </div>
 
-                        <div className="mt-3">
-                            <strong>Kapacitet:</strong>
+                        <div>
+                            <strong>Ukupan broj mjesta:</strong>{" "}
+                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
+                                ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
+                            }
+                        </div>
 
+                        <div className="mt-3">
+                            <strong>Rezervirana mjesta:</strong>
                             <div className="d-flex gap-1 mt-1 flex-wrap">
                                 {getSeatBoxes(
                                     dogadjaji.find(d => d.sifra === rez.dogadjajSifra),
                                     rezervacije
                                 )}
                             </div>
-                        </div>
-
-                        <div>
-                            <strong>Broj mjesta:</strong>{" "}
-                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
-                                ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
-                            }
                         </div>
 
                         <div className="mt-3 d-flex gap-2">

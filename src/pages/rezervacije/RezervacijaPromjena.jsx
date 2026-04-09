@@ -57,7 +57,8 @@ export default function RezervacijaPromjena() {
 
         promjeni({
             korisnikSifra: parseInt(podaci.get("korisnik")),
-            dogadjajSifra: parseInt(podaci.get("dogadjaj"))
+            dogadjajSifra: parseInt(podaci.get("dogadjaj")),
+            brojKarata: parseInt(podaci.get("brojKarata"))
         });
     }
 
@@ -106,6 +107,19 @@ export default function RezervacijaPromjena() {
                                         </Form.Select>
                                     </Form.Group>
                                 </Col>
+                            </Row>
+                            <Row>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Broj karata</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="brojKarata"
+                                        min="1"
+                                        max="5"
+                                        defaultValue={rezervacija.brojKarata}
+                                        required
+                                    />
+                                </Form.Group>
                             </Row>
 
                             <hr />

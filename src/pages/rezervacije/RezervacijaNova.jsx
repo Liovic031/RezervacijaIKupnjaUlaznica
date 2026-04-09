@@ -50,9 +50,10 @@ export default function RezervacijaNova() {
         dodaj({
             korisnikSifra: parseInt(podaci.get("korisnik")),
             dogadjajSifra: parseInt(podaci.get("dogadjaj")),
+            brojKarata: parseInt(podaci.get("brojKarata")),
             datumRezervacije: new Date().toISOString()
         });
-        
+
     }
 
     return (
@@ -92,6 +93,19 @@ export default function RezervacijaNova() {
                                         </Form.Select>
                                     </Form.Group>
                                 </Col>
+                            </Row>
+                            <Row>
+                                <Form.Group className="mb-3">
+                                    <Form.Label>Broj karata</Form.Label>
+                                    <Form.Control
+                                        type="number"
+                                        name="brojKarata"
+                                        min="1"
+                                        max="5"
+                                        defaultValue={1}
+                                        required
+                                    />
+                                </Form.Group>
                             </Row>
 
                             <hr />
