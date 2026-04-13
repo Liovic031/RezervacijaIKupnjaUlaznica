@@ -1,5 +1,7 @@
 const STORAGE_KEY = 'korisnici';
 
+import RezervacijaService from "../rezervacije/RezervacijaService";
+
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY);
     return podaci ? JSON.parse(podaci) : [];
@@ -23,15 +25,14 @@ async function getBySifra(sifra) {
 async function dodaj(korisnik) {
     const korisnici = dohvatiSveIzStorage();
 
-    if (korisnici.length === 0) {
-        korisnik.sifra = 1;
-    } else {
-        const maxSifra = Math.max(...korisnici.map(s => s.sifra));
-        korisnik.sifra = maxSifra + 1;
-    }
+    korisnik.sifra =
+        korisnici.length === 0
+            ? 1
+            : Math.max(...korisnici.map(s => s.sifra)) + 1;
 
     korisnici.push(korisnik);
     spremiUStorage(korisnici);
+
     return { data: korisnik };
 }
 
@@ -43,13 +44,27 @@ async function promjeni(sifra, korisnik) {
         korisnici[index] = { ...korisnici[index], ...korisnik };
         spremiUStorage(korisnici);
     }
+
     return { data: korisnici[index] };
 }
 
 async function obrisi(sifra) {
+
+    // 1. DOHVATI SVE REZERVACIJE
+    const rez = await RezervacijaService.get();
+
+    // 2. OBRIŠI ONE KOJE PRIPADAJU KORISNIKU
+    for (let r of rez.data) {
+        if (r.korisnikSifra === parseInt(sifra)) {
+            await RezervacijaService.obrisi(r.sifra);
+        }
+    }
+
+    // 3. OBRIŠI KORISNIKA
     let korisnici = dohvatiSveIzStorage();
     korisnici = korisnici.filter(s => s.sifra !== parseInt(sifra));
     spremiUStorage(korisnici);
+
     return { message: 'Obrisano' };
 }
 

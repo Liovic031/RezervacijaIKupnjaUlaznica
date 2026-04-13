@@ -1,3 +1,6 @@
+import KartaService from "../karte/KartaService";
+import RezervacijaService from "../rezervacije/RezervacijaService";
+
 const STORAGE_KEY = 'dogadjaji';
 
 function dohvatiSveIzStorage() {
@@ -32,6 +35,7 @@ async function dodaj(dogadjaj) {
     
     dogadjaji.push(dogadjaj);
     spremiUStorage(dogadjaji);
+    await KartaService.generirajZaDogadjaj(dogadjaj);
     return { data: dogadjaj };
 }
 
@@ -47,9 +51,22 @@ async function promjeni(sifra, dogadjaj) {
 }
 
 async function obrisi(sifra) {
+
+    // obriši rezervacije tog događaja
+    const rez = await RezervacijaService.get();
+    for (let r of rez.data) {
+        if (r.dogadjajSifra === parseInt(sifra)) {
+            await RezervacijaService.obrisi(r.sifra);
+        }
+    }
+
+    // obriši karte
+    await KartaService.obrisiZaDogadjaj(parseInt(sifra));
+
     let dogadjaji = dohvatiSveIzStorage();
     dogadjaji = dogadjaji.filter(s => s.sifra !== parseInt(sifra));
     spremiUStorage(dogadjaji);
+
     return { message: 'Obrisano' };
 }
 

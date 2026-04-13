@@ -5,136 +5,137 @@ import { RouteNames } from "../../constants";
 import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import KorisnikService from "../../services/korisnici/KorisnikService";
 import DogadjajService from "../../services/dogadjaji/DogadjajService";
+import KartaService from "../../services/karte/KartaService";
 
 export default function RezervacijaPromjena() {
 
     const navigate = useNavigate();
     const params = useParams();
 
-    const [rezervacija, setRezervacija] = useState({});
+    const [rezervacija, setRezervacija] = useState(null);
     const [korisnici, setKorisnici] = useState([]);
     const [dogadjaji, setDogadjaji] = useState([]);
+    const [karte, setKarte] = useState([]);
+    const [odabraneKarte, setOdabraneKarte] = useState([]);
 
-    async function ucitajRezervaciju() {
-        const odgovor = await RezervacijaService.getBySifra(params.sifra);
-        if (odgovor.success) setRezervacija(odgovor.data);
+    async function ucitajSve() {
+        const r = await RezervacijaService.getBySifra(params.sifra);
+        const k = await KorisnikService.get();
+        const d = await DogadjajService.get();
+
+        if (r.success) {
+            setRezervacija(r.data);
+            setOdabraneKarte(r.data.brojeviKarata || []);
+            ucitajKarte(r.data.dogadjajSifra, r.data.sifra);
+        }
+
+        if (k.success) setKorisnici(k.data);
+        if (d.success) setDogadjaji(d.data);
     }
 
-    async function ucitajKorisnike() {
-        const odgovor = await KorisnikService.get();
-        if (odgovor.success) setKorisnici(odgovor.data);
-    }
+    async function ucitajKarte(dogadjajSifra, rezSifra) {
+        const o = await KartaService.getByDogadjaj(dogadjajSifra);
 
-    async function ucitajDogadjaje() {
-        const odgovor = await DogadjajService.get();
-        if (odgovor.success) setDogadjaji(odgovor.data);
+        const filtrirane = o.data.filter(k =>
+            !k.rezervirano || k.rezervacijaSifra === rezSifra
+        );
+
+        setKarte(filtrirane);
     }
 
     useEffect(() => {
-        ucitajRezervaciju();
-        ucitajKorisnike();
-        ucitajDogadjaje();
+        ucitajSve();
     }, []);
 
-    async function promjeni(rezervacija) {
-        await RezervacijaService.promjeni(params.sifra, rezervacija);
-        navigate(RouteNames.REZERVACIJE);
-    }
+    if (!rezervacija) return <p>Učitavanje...</p>;
 
-    function odradiSubmit(e) {
+    async function odradiSubmit(e) {
         e.preventDefault();
         const podaci = new FormData(e.target);
 
-        if (!podaci.get("korisnik")) {
-            alert("Odaberite korisnika!");
-            return;
-        }
+        const korisnik = parseInt(podaci.get("korisnik"));
+        const dogadjaj = parseInt(podaci.get("dogadjaj"));
 
-        if (!podaci.get("dogadjaj")) {
-            alert("Odaberite događaj!");
-            return;
-        }
+        // oslobodi stare
+        await KartaService.oslobodiKarte(params.sifra);
 
-        promjeni({
-            korisnikSifra: parseInt(podaci.get("korisnik")),
-            dogadjajSifra: parseInt(podaci.get("dogadjaj")),
-            brojKarata: parseInt(podaci.get("brojKarata"))
+        // spremi
+        await RezervacijaService.promjeni(params.sifra, {
+            korisnikSifra: korisnik,
+            dogadjajSifra: dogadjaj,
+            brojeviKarata: odabraneKarte
         });
+
+        // rezerviraj nove
+        await KartaService.rezervirajKarte(
+            dogadjaj,
+            odabraneKarte,
+            params.sifra
+        );
+
+        navigate(RouteNames.REZERVACIJE);
     }
 
     return (
         <>
-            <h3 className="mb-4">Promjena rezervacije</h3>
+            <h3>Promjena rezervacije</h3>
 
             <Form onSubmit={odradiSubmit}>
                 <Container>
                     <Card className="p-3">
-
                         <Card.Body>
+
                             <Row>
                                 <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Korisnik</Form.Label>
-                                        <Form.Select
-                                            name="korisnik"
-                                            defaultValue={rezervacija.korisnik}
-                                            required
-                                        >
-                                            <option value="">-- odaberite korisnika --</option>
-                                            {korisnici.map(k => (
-                                                <option key={k.sifra} value={k.sifra}>
-                                                    {k.ime} {k.prezime}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
+                                    <Form.Select name="korisnik" defaultValue={rezervacija.korisnikSifra}>
+                                        {korisnici.map(k => (
+                                            <option key={k.sifra} value={k.sifra}>
+                                                {k.ime} {k.prezime}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
 
                                 <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Događaj</Form.Label>
-                                        <Form.Select
-                                            name="dogadjaj"
-                                            defaultValue={rezervacija.dogadjaj}
-                                            required
-                                        >
-                                            <option value="">-- odaberite događaj --</option>
-                                            {dogadjaji.map(d => (
-                                                <option key={d.sifra} value={d.sifra}>
-                                                    {d.naziv}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
+                                    <Form.Select
+                                        name="dogadjaj"
+                                        defaultValue={rezervacija.dogadjajSifra}
+                                        onChange={(e) => ucitajKarte(e.target.value, params.sifra)}
+                                    >
+                                        {dogadjaji.map(d => (
+                                            <option key={d.sifra} value={d.sifra}>
+                                                {d.naziv}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
-                            </Row>
-                            <Row>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Broj karata</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="brojKarata"
-                                        min="1"
-                                        max="5"
-                                        defaultValue={rezervacija.brojKarata}
-                                        required
-                                    />
-                                </Form.Group>
                             </Row>
 
                             <hr />
+                            <p className="text-muted small mb-2">
+                                (CTRL za višestruki odabir)
+                            </p>
+                            <Form.Select
+                                multiple
+                                value={odabraneKarte}
+                                onChange={(e) =>
+                                    setOdabraneKarte(
+                                        Array.from(e.target.selectedOptions, o => parseInt(o.value))
+                                    )
+                                }
+                            >
+                                {karte.map(k => (
+                                    <option key={k.sifra} value={k.broj}>
+                                        Karta broj {k.broj}
+                                    </option>
+                                ))}
+                            </Form.Select>
 
-                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Link to={RouteNames.REZERVACIJE} className="btn btn-danger px-4">
-                                    Odustani
-                                </Link>
+                            <hr />
 
-                                <Button type="submit" variant="success" className="px-4">
-                                    Spremi promjene
-                                </Button>
-                            </div>
+                            <Button type="submit">Spremi</Button>
+
                         </Card.Body>
-
                     </Card>
                 </Container>
             </Form>

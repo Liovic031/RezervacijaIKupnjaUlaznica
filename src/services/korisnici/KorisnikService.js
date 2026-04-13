@@ -31,5 +31,7 @@ export default {
     getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
     dodaj: (korisnik) => AktivniServis.dodaj(korisnik),
     promjeni: (sifra, korisnik) => AktivniServis.promjeni(sifra, korisnik),
-    obrisi: (sifra) => AktivniServis.obrisi(sifra)
+    obrisi: (sifra) => AktivniServis.obrisi(sifra),
+    oslobodiKarte: (rezSifra) => AktivniServis.oslobodiKarte(rezSifra),
+    obrisiZaDogadjaj: (sifra) => AktivniServis.obrisiZaDogadjaj(sifra)
 };

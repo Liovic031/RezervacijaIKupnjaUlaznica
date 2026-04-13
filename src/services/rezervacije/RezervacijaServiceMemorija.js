@@ -1,4 +1,5 @@
 import { rezervacije } from "./RezervacijaPodaci";
+import KartaService from "../karte/KartaService";
 
 // 1/4 Read
 async function get() {
@@ -19,6 +20,8 @@ async function dodaj(rezervacija) {
         : 1;
 
     rezervacije.push(rezervacija);
+
+    return { data: rezervacija };
 }
 
 // 3/4 Update
@@ -33,8 +36,9 @@ function nadiIndex(sifra) {
 
 // 4/4 Delete
 async function obrisi(sifra) {
+    await KartaService.oslobodiKarte(parseInt(sifra));
+
     const index = nadiIndex(sifra);
     rezervacije.splice(index, 1);
 }
-
 export default { get, getBySifra, dodaj, promjeni, obrisi };

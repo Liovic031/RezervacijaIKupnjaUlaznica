@@ -7,6 +7,7 @@ import DogadjajService from "../../services/dogadjaji/DogadjajService"
 import KorisnikService from "../../services/korisnici/KorisnikService"
 import { RouteNames } from "../../constants"
 import FormatDatuma from "../../components/ForamtDatuma"
+import KartaService from "../../services/karte/KartaService";
 
 export default function RezervacijaPregled() {
 
@@ -15,6 +16,7 @@ export default function RezervacijaPregled() {
     const [rezervacije, setRezervacije] = useState([]);
     const [korisnici, setKorisnici] = useState([]);
     const [dogadjaji, setDogadjaji] = useState([]);
+    const [karte, setKarte] = useState([]);
 
     // Učitavanje podataka
     async function ucitajRezervacije() {
@@ -35,46 +37,51 @@ export default function RezervacijaPregled() {
         setKorisnici(odgovor.data);
     }
 
+    async function ucitajKarte() {
+        const odgovor = await KartaService.get();
+        if (!odgovor.success) return;
+        setKarte(odgovor.data);
+    }
+
     useEffect(() => {
         ucitajRezervacije();
         ucitajKorisnike();
         ucitajDogadjaje();
+        ucitajKarte();
     }, []);
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati rezervaciju?")) return;
         await RezervacijaService.obrisi(sifra);
         ucitajRezervacije();
+        ucitajKarte();
     }
 
-    function getSeatBoxes(dogadjaj, rezervacije) {
-        if (!dogadjaj) return;
+    function getSeatBoxes(rez, karte) {
+        return karte.map(k => {
+            let boja = "lightgreen";
 
-        const ukupno = dogadjaj.brojMjesta;
+            if (k.rezervirano) {
+                boja = rez.brojeviKarata?.includes(k.broj) ? "#428af7" : "red";
+            }
 
-        const zauzeto = rezervacije
-            .filter(r => r.dogadjajSifra === dogadjaj.sifra)
-            .reduce((sum, r) => sum + (r.brojKarata || 1), 0);
-
-        const items = [];
-
-        for (let i = 0; i < ukupno; i++) {
-            items.push(
+            return (
                 <div
-                    key={i}
+                    key={k.sifra}
                     style={{
-                        width: "14px",
-                        height: "14px",
-                        backgroundColor: i < zauzeto ? "red" : "lightgreen",
+                        width: "16px",
+                        height: "16px",
+                        backgroundColor: boja,
                         border: "1px solid #888",
-                        borderRadius: "2px"
+                        fontSize: "10px",
+                        fontWeight: "bold",
+                        textAlign: "center"
                     }}
-                    title={i < zauzeto ? "Zauzeto mjesto" : "Slobodno mjesto"}
-                />
+                >
+                    {k.broj}
+                </div>
             );
-        }
-
-        return items;
+        });
     }
 
 
@@ -136,12 +143,17 @@ export default function RezervacijaPregled() {
                             }
                         </div>
 
+                        <div>
+                            <strong>Vaše karte:</strong>{" "}
+                            {rez.brojeviKarata?.join(", ") || "-"}
+                        </div>
+
                         <div className="mt-3">
                             <strong>Rezervirana mjesta:</strong>
-                            <div className="d-flex gap-1 mt-1 flex-wrap">
+                            <div className="d-flex flex-wrap gap-1">
                                 {getSeatBoxes(
-                                    dogadjaji.find(d => d.sifra === rez.dogadjajSifra),
-                                    rezervacije
+                                    rez,
+                                    karte.filter(k => k.dogadjajSifra === rez.dogadjajSifra)
                                 )}
                             </div>
                         </div>

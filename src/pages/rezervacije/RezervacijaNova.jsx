@@ -5,6 +5,7 @@ import { RouteNames } from "../../constants";
 import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import KorisnikService from "../../services/korisnici/KorisnikService";
 import DogadjajService from "../../services/dogadjaji/DogadjajService";
+import KartaService from "../../services/karte/KartaService";
 
 export default function RezervacijaNova() {
 
@@ -12,15 +13,22 @@ export default function RezervacijaNova() {
 
     const [korisnici, setKorisnici] = useState([]);
     const [dogadjaji, setDogadjaji] = useState([]);
+    const [karte, setKarte] = useState([]);
+    const [odabraneKarte, setOdabraneKarte] = useState([]);
 
     async function ucitajKorisnike() {
-        const odgovor = await KorisnikService.get();
-        if (odgovor.success) setKorisnici(odgovor.data);
+        const o = await KorisnikService.get();
+        if (o.success) setKorisnici(o.data);
     }
 
     async function ucitajDogadjaje() {
-        const odgovor = await DogadjajService.get();
-        if (odgovor.success) setDogadjaji(odgovor.data);
+        const o = await DogadjajService.get();
+        if (o.success) setDogadjaji(o.data);
+    }
+
+    async function ucitajKarte(dogadjajSifra) {
+        const o = await KartaService.getByDogadjaj(dogadjajSifra);
+        setKarte(o.data.filter(k => !k.rezervirano));
     }
 
     useEffect(() => {
@@ -28,32 +36,34 @@ export default function RezervacijaNova() {
         ucitajDogadjaje();
     }, []);
 
-    async function dodaj(rezervacija) {
-        await RezervacijaService.dodaj(rezervacija);
-        navigate(RouteNames.REZERVACIJE);
-    }
-
-    function odradiSubmit(e) {
+    async function odradiSubmit(e) {
         e.preventDefault();
         const podaci = new FormData(e.target);
 
-        if (!podaci.get("korisnik")) {
-            alert("Odaberite korisnika!");
+        const korisnik = parseInt(podaci.get("korisnik"));
+        const dogadjaj = parseInt(podaci.get("dogadjaj"));
+
+        if (!korisnik || !dogadjaj) {
+            alert("Sve mora biti odabrano!");
             return;
         }
 
-        if (!podaci.get("dogadjaj")) {
-            alert("Odaberite događaj!");
-            return;
-        }
-
-        dodaj({
-            korisnikSifra: parseInt(podaci.get("korisnik")),
-            dogadjajSifra: parseInt(podaci.get("dogadjaj")),
-            brojKarata: parseInt(podaci.get("brojKarata")),
+        const novaRez = {
+            korisnikSifra: korisnik,
+            dogadjajSifra: dogadjaj,
+            brojeviKarata: odabraneKarte,
             datumRezervacije: new Date().toISOString()
-        });
+        };
 
+        const rez = await RezervacijaService.dodaj(novaRez);
+
+        await KartaService.rezervirajKarte(
+            dogadjaj,
+            odabraneKarte,
+            rez.data.sifra
+        );
+
+        navigate(RouteNames.REZERVACIJE);
     }
 
     return (
@@ -63,64 +73,60 @@ export default function RezervacijaNova() {
             <Form onSubmit={odradiSubmit}>
                 <Container>
                     <Card className="p-3">
-
                         <Card.Body>
+
                             <Row>
                                 <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Korisnik</Form.Label>
-                                        <Form.Select name="korisnik" required>
-                                            <option value="">-- odaberite korisnika --</option>
-                                            {korisnici.map(k => (
-                                                <option key={k.sifra} value={k.sifra}>
-                                                    {k.ime} {k.prezime}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
+                                    <Form.Select name="korisnik" required>
+                                        <option value="">-- korisnik --</option>
+                                        {korisnici.map(k => (
+                                            <option key={k.sifra} value={k.sifra}>
+                                                {k.ime} {k.prezime}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
                                 </Col>
 
                                 <Col md={6}>
-                                    <Form.Group className="mb-3">
-                                        <Form.Label>Događaj</Form.Label>
-                                        <Form.Select name="dogadjaj" required>
-                                            <option value="">-- odaberite događaj --</option>
-                                            {dogadjaji.map(d => (
-                                                <option key={d.sifra} value={d.sifra}>
-                                                    {d.naziv}
-                                                </option>
-                                            ))}
-                                        </Form.Select>
-                                    </Form.Group>
-                                </Col>
-                            </Row>
-                            <Row>
-                                <Form.Group className="mb-3">
-                                    <Form.Label>Broj karata</Form.Label>
-                                    <Form.Control
-                                        type="number"
-                                        name="brojKarata"
-                                        min="1"
-                                        max="5"
-                                        defaultValue={1}
+                                    <Form.Select
+                                        name="dogadjaj"
                                         required
-                                    />
-                                </Form.Group>
+                                        onChange={(e) => ucitajKarte(e.target.value)}
+                                    >
+                                        <option value="">-- događaj --</option>
+                                        {dogadjaji.map(d => (
+                                            <option key={d.sifra} value={d.sifra}>
+                                                {d.naziv}
+                                            </option>
+                                        ))}
+                                    </Form.Select>
+                                </Col>
                             </Row>
 
                             <hr />
+                            <p className="text-muted small mb-2">
+                                (CTRL za višestruki odabir)
+                            </p>
+                            <Form.Select
+                                multiple
+                                value={odabraneKarte}
+                                onChange={(e) =>
+                                    setOdabraneKarte(
+                                        Array.from(e.target.selectedOptions, o => parseInt(o.value))
+                                    )
+                                }
+                            >
+                                {karte.map(k => (
+                                    <option key={k.sifra} value={k.broj}>
+                                        Karta broj {k.broj}
+                                    </option>
+                                ))}
+                            </Form.Select>
 
-                            <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Link to={RouteNames.REZERVACIJE} className="btn btn-danger px-4">
-                                    Odustani
-                                </Link>
+                            <hr />
 
-                                <Button type="submit" variant="success" className="px-4">
-                                    Kreiraj rezervaciju
-                                </Button>
-                            </div>
+                            <Button type="submit">Spremi</Button>
                         </Card.Body>
-
                     </Card>
                 </Container>
             </Form>

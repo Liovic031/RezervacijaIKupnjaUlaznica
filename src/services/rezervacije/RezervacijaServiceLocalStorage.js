@@ -1,4 +1,5 @@
 const STORAGE_KEY = "rezervacije";
+import KartaService from "../karte/KartaService";
 
 function dohvatiSveIzStorage() {
     const podaci = localStorage.getItem(STORAGE_KEY);
@@ -47,9 +48,12 @@ async function promjeni(sifra, rezervacija) {
 }
 
 async function obrisi(sifra) {
+    await KartaService.oslobodiKarte(parseInt(sifra));
+
     let rezervacije = dohvatiSveIzStorage();
     rezervacije = rezervacije.filter(r => r.sifra !== parseInt(sifra));
     spremiUStorage(rezervacije);
+
     return { message: "Obrisano" };
 }
 
