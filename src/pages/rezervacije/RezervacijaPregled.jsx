@@ -52,6 +52,7 @@ export default function RezervacijaPregled() {
 
     async function obrisi(sifra) {
         if (!confirm("Sigurno obrisati rezervaciju?")) return;
+        await KartaService.oslobodiKarte(sifra);
         await RezervacijaService.obrisi(sifra);
         ucitajRezervacije();
         ucitajKarte();

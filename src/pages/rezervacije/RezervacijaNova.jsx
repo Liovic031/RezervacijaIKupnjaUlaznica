@@ -15,6 +15,7 @@ export default function RezervacijaNova() {
     const [dogadjaji, setDogadjaji] = useState([]);
     const [karte, setKarte] = useState([]);
     const [odabraneKarte, setOdabraneKarte] = useState([]);
+    const [otvoreno, setOtvoreno] = useState(false);
 
     async function ucitajKorisnike() {
         const o = await KorisnikService.get();
@@ -45,6 +46,11 @@ export default function RezervacijaNova() {
 
         if (!korisnik || !dogadjaj) {
             alert("Sve mora biti odabrano!");
+            return;
+        }
+
+        if (odabraneKarte.length === 0) {
+            alert("Odaberi barem jednu kartu!");
             return;
         }
 
@@ -104,24 +110,53 @@ export default function RezervacijaNova() {
                             </Row>
 
                             <hr />
-                            <p className="text-muted small mb-2">
-                                (CTRL za višestruki odabir)
-                            </p>
-                            <Form.Select
-                                multiple
-                                value={odabraneKarte}
-                                onChange={(e) =>
-                                    setOdabraneKarte(
-                                        Array.from(e.target.selectedOptions, o => parseInt(o.value))
-                                    )
-                                }
-                            >
-                                {karte.map(k => (
-                                    <option key={k.sifra} value={k.broj}>
-                                        Karta broj {k.broj}
-                                    </option>
-                                ))}
-                            </Form.Select>
+                            <div className="mb-3 position-relative">
+
+                                <Button
+                                    variant="secondary"
+                                    onClick={() => setOtvoreno(!otvoreno)}
+                                >
+                                    Odaberi karte ({odabraneKarte.length})
+                                </Button>
+
+                                {otvoreno && (
+                                    <div
+                                        className="border rounded p-2 mt-2 bg-white"
+                                        style={{
+                                            maxHeight: "200px",
+                                            overflowY: "auto",
+                                            position: "absolute",
+                                            zIndex: 1000,
+                                            width: "100%"
+                                        }}
+                                    >
+                                        {karte.map(k => (
+                                            <Form.Check
+                                                key={k.sifra}
+                                                id={`karta-${k.sifra}`}
+                                                type="checkbox"
+                                                label={`Karta ${k.broj}`}
+                                                checked={odabraneKarte.includes(k.broj)}
+                                                disabled={
+                                                    !odabraneKarte.includes(k.broj) && odabraneKarte.length >= 5
+                                                }
+                                                onChange={() => {
+                                                    if (odabraneKarte.includes(k.broj)) {
+                                                        setOdabraneKarte(odabraneKarte.filter(b => b !== k.broj));
+                                                    } else {
+                                                        if (odabraneKarte.length >= 5) {
+                                                            alert("Max 5 karata!");
+                                                            return;
+                                                        }
+                                                        setOdabraneKarte([...odabraneKarte, k.broj]);
+                                                    }
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
+
+                            </div>
 
                             <hr />
 
