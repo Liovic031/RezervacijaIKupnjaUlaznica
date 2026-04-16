@@ -67,7 +67,7 @@ async function oslobodiKarte(rezervacijaSifra) {
     const karte = dohvatiSveIzStorage();
 
     karte.forEach(k => {
-        if (k.rezervacijaSifra === rezervacijaSifra) {
+        if (k.rezervacijaSifra === parseInt(rezervacijaSifra)) {
             k.rezervirano = false;
             k.rezervacijaSifra = null;
         }

@@ -36,8 +36,6 @@ function nadiIndex(sifra) {
 
 // 4/4 Delete
 async function obrisi(sifra) {
-    await KartaService.oslobodiKarte(parseInt(sifra));
-
     const index = nadiIndex(sifra);
     rezervacije.splice(index, 1);
 }

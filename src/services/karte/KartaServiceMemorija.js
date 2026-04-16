@@ -46,7 +46,7 @@ async function rezervirajKarte(dogadjajSifra, brojevi, rezervacijaSifra) {
 
 async function oslobodiKarte(rezervacijaSifra) {
     karte.forEach(k => {
-        if (k.rezervacijaSifra === rezervacijaSifra) {
+        if (k.rezervacijaSifra === parseInt(rezervacijaSifra)) {
             k.rezervirano = false;
             k.rezervacijaSifra = null;
         }

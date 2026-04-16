@@ -29,7 +29,20 @@ export default function RezervacijaNova() {
 
     async function ucitajKarte(dogadjajSifra) {
         const o = await KartaService.getByDogadjaj(dogadjajSifra);
-        setKarte(o.data.filter(k => !k.rezervirano));
+
+        const rezervacije = await RezervacijaService.get();
+
+        const filtrirane = o.data.filter(k => {
+            // karta je slobodna ako:
+            // nije rezervirana
+            // ili rezervacija više ne postoji
+            return (
+                !k.rezervirano ||
+                !rezervacije.data.some(r => r.sifra === k.rezervacijaSifra)
+            );
+        });
+
+        setKarte(filtrirane);
     }
 
     useEffect(() => {

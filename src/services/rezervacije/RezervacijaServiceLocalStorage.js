@@ -48,8 +48,6 @@ async function promjeni(sifra, rezervacija) {
 }
 
 async function obrisi(sifra) {
-    await KartaService.oslobodiKarte(parseInt(sifra));
-
     let rezervacije = dohvatiSveIzStorage();
     rezervacije = rezervacije.filter(r => r.sifra !== parseInt(sifra));
     spremiUStorage(rezervacije);
