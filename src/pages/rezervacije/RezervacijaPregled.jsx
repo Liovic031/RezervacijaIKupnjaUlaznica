@@ -114,7 +114,7 @@ export default function RezervacijaPregled() {
                             <strong>Cijena:</strong>{" "}
                             {dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
                                 <NumericFormat
-                                    value={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).cijena}
+                                    value={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).cijena * rezervacije.find(r => r.sifra === rez.sifra).brojeviKarata.length}
                                     displayType={'text'}
                                     thousandSeparator='.'
                                     decimalSeparator=','

@@ -38,9 +38,10 @@ export default function RezervacijaPromjena() {
         const o = await KartaService.getByDogadjaj(dogadjajSifra);
 
         const filtrirane = o.data.filter(k =>
-            !k.rezervirano || k.rezervacijaSifra === rezSifra
+            !k.rezervirano ||
+            k.rezervacijaSifra === rezSifra ||
+            odabraneKarte.includes(k.broj)
         );
-
         setKarte(filtrirane);
     }
 

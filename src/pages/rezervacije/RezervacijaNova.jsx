@@ -96,8 +96,9 @@ export default function RezervacijaNova() {
 
                             <Row>
                                 <Col md={6}>
+                                    <Form.Label>Korisnik</Form.Label>
                                     <Form.Select name="korisnik" required>
-                                        <option value="">-- korisnik --</option>
+                                        <option value="">Odaberite korisnika</option>
                                         {korisnici.map(k => (
                                             <option key={k.sifra} value={k.sifra}>
                                                 {k.ime} {k.prezime}
@@ -107,12 +108,13 @@ export default function RezervacijaNova() {
                                 </Col>
 
                                 <Col md={6}>
+                                    <Form.Label>Događaj</Form.Label>
                                     <Form.Select
                                         name="dogadjaj"
                                         required
                                         onChange={(e) => ucitajKarte(e.target.value)}
                                     >
-                                        <option value="">-- događaj --</option>
+                                        <option value="">Odaberite događaj</option>
                                         {dogadjaji.map(d => (
                                             <option key={d.sifra} value={d.sifra}>
                                                 {d.naziv}
