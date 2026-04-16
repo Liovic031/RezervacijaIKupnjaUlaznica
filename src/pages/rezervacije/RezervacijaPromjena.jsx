@@ -89,6 +89,7 @@ export default function RezervacijaPromjena() {
 
                             <Row>
                                 <Col md={6}>
+                                    <Form.Label>Korisnik</Form.Label>
                                     <Form.Select name="korisnik" defaultValue={rezervacija.korisnikSifra}>
                                         {korisnici.map(k => (
                                             <option key={k.sifra} value={k.sifra}>
@@ -99,6 +100,7 @@ export default function RezervacijaPromjena() {
                                 </Col>
 
                                 <Col md={6}>
+                                    <Form.Label>Događaj</Form.Label>
                                     <Form.Select
                                         name="dogadjaj"
                                         defaultValue={rezervacija.dogadjajSifra}
