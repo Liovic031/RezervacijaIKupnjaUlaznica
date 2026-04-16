@@ -163,7 +163,15 @@ export default function RezervacijaPromjena() {
 
                             <hr />
 
-                            <Button type="submit">Spremi</Button>
+                            <div className="d-flex justify-content-start gap-2 mt-3">
+                                <Button type="submit" variant="success">
+                                    Spremi
+                                </Button>
+
+                                <Link to={RouteNames.REZERVACIJE} className="btn btn-danger">
+                                    Odustani
+                                </Link>
+                            </div>
 
                         </Card.Body>
                     </Card>
