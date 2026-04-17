@@ -8,6 +8,7 @@ import KorisnikService from "../../services/korisnici/KorisnikService"
 import { RouteNames } from "../../constants"
 import FormatDatuma from "../../components/ForamtDatuma"
 import KartaService from "../../services/karte/KartaService";
+import RezervacijaPDFGenerator from "../../components/RezervacijaPDFGenerator"
 
 export default function RezervacijaPregled() {
 
@@ -158,11 +159,16 @@ export default function RezervacijaPregled() {
                                 )}
                             </div>
                         </div>
-
                         <div className="mt-3 d-flex gap-2">
-                            <Button onClick={() => navigate(`/rezervacije/${rez.sifra}`)}>Promjena</Button>
-                            <Button variant="danger" onClick={() => obrisi(rez.sifra)}>Obriši</Button>
+                                <Button onClick={() => navigate(`/rezervacije/${rez.sifra}`)}>Promjena</Button>
+                                <Button variant="danger" onClick={() => obrisi(rez.sifra)}>Obriši</Button>
+                                <RezervacijaPDFGenerator
+                                    rezervacija={rez}
+                                    dogadjaj={dogadjaji.find(d => d.sifra === rez.dogadjajSifra)}
+                                    korisnik={korisnici.find(k => k.sifra === rez.korisnikSifra)}
+                                />
                         </div>
+
                     </div>
                 ))}
             </div>
