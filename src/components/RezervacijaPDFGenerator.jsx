@@ -130,6 +130,9 @@ export default function RezervacijaPDFGenerator({ rezervacija, dogadjaj, korisni
         const qrX = (pageWidth - qrSize) / 2;
 
         doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
+        // da se klikom moze potvrditi - kasnije ce biti obrisano
+        doc.link(qrX, qrY, qrSize, qrSize, { url });
+
 
 
 
