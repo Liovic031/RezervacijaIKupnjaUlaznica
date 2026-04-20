@@ -15,6 +15,8 @@ export const RouteNames = {
     REZERVACIJE_PROMJENA: '/rezervacije/:sifra',
 
     REZERVACIJE_EVIDENTIRAJ: '/rezervacije/evidentiraj/:sifra',
+
+    GENERIRANJE_PODATAKA: '/generiranje'
     // ovo je ruta
 }
 

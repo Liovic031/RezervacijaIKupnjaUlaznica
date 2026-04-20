@@ -70,7 +70,7 @@ export default function RezervacijaPregled() {
                     } else {
                         boja = "#428af7";
                     }
-                } 
+                }
                 else {
                     boja = "red";
                 }
@@ -86,8 +86,14 @@ export default function RezervacijaPregled() {
                         border: "1px solid #888",
                         fontSize: "10px",
                         fontWeight: "bold",
-                        textAlign: "center"
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        boxSizing: "content-box",
+                        paddingRight: "2px",
+                        paddingLeft: "2px",
                     }}
+
                 >
                     {k.broj}
                 </div>
@@ -155,7 +161,7 @@ export default function RezervacijaPregled() {
                                     Evidentirano ✓
                                 </span>
                             ) : (
-                                <span style={{ color: "red", fontWeight: "bold" }}>
+                                <span>
                                     Nije evidentirano
                                 </span>
                             )}

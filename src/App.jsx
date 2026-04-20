@@ -15,6 +15,7 @@ import RezervacijaPregled from './pages/rezervacije/RezervacijaPregled'
 import RezervacijaPromjena from './pages/rezervacije/RezervacijaPromjena'
 import RezervacijaNova from './pages/rezervacije/RezervacijaNova'
 import RezervacijaEvidentiraj from './pages/rezervacije/RezervacijaEvidentiraj'
+import GeneriranjePodataka from './pages/generiranje/GeneriranjePodataka'
 
 
 function App() {
@@ -35,6 +36,7 @@ function App() {
         <Route path={RouteNames.REZERVACIJE_PROMJENA} element={<RezervacijaPromjena />} />
         <Route path={RouteNames.REZERVACIJE_NOVE} element={<RezervacijaNova />}/>
         <Route path={RouteNames.REZERVACIJE_EVIDENTIRAJ} element={<RezervacijaEvidentiraj />}/>
+        <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
       </Routes>
       <hr />
       <div className='footer'>&copy; Event Booking APP</div>
