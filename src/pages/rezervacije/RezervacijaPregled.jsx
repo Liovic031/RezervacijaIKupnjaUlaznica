@@ -61,10 +61,19 @@ export default function RezervacijaPregled() {
 
     function getSeatBoxes(rez, karte) {
         return karte.map(k => {
-            let boja = "lightgreen";
+            let boja = "lightgreen"; // slobodno
 
             if (k.rezervirano) {
-                boja = rez.brojeviKarata?.includes(k.broj) ? "#428af7" : "red";
+                if (rez.brojeviKarata?.includes(k.broj)) {
+                    if (rez.evidentirano) {
+                        boja = "yellow";
+                    } else {
+                        boja = "#428af7";
+                    }
+                } 
+                else {
+                    boja = "red";
+                }
             }
 
             return (
@@ -85,6 +94,7 @@ export default function RezervacijaPregled() {
             );
         });
     }
+
 
 
     return (

@@ -19,6 +19,9 @@ async function dodaj(rezervacija) {
         ? rezervacije[rezervacije.length - 1].sifra + 1 
         : 1;
 
+    rezervacija.evidentirano = false;
+    rezervacija.datumEvidentiranja = null;
+    
     rezervacije.push(rezervacija);
 
     return { data: rezervacija };
