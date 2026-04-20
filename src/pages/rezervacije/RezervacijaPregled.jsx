@@ -139,6 +139,27 @@ export default function RezervacijaPregled() {
                         </div>
 
                         <div>
+                            <strong>Status ulaza:</strong>{" "}
+                            {rez.evidentirano ? (
+                                <span style={{ color: "green", fontWeight: "bold" }}>
+                                    Evidentirano ✓
+                                </span>
+                            ) : (
+                                <span style={{ color: "red", fontWeight: "bold" }}>
+                                    Nije evidentirano
+                                </span>
+                            )}
+                        </div>
+
+                        {rez.evidentirano && (
+                            <div>
+                                <strong>Datum evidentiranja:</strong>{" "}
+                                <FormatDatuma datum={rez.datumEvidentiranja} />
+                            </div>
+                        )}
+
+
+                        <div>
                             <strong>Ukupan broj mjesta:</strong>{" "}
                             {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
                                 ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
@@ -160,13 +181,13 @@ export default function RezervacijaPregled() {
                             </div>
                         </div>
                         <div className="mt-3 d-flex gap-2">
-                                <Button onClick={() => navigate(`/rezervacije/${rez.sifra}`)}>Promjena</Button>
-                                <Button variant="danger" onClick={() => obrisi(rez.sifra)}>Obriši</Button>
-                                <RezervacijaPDFGenerator
-                                    rezervacija={rez}
-                                    dogadjaj={dogadjaji.find(d => d.sifra === rez.dogadjajSifra)}
-                                    korisnik={korisnici.find(k => k.sifra === rez.korisnikSifra)}
-                                />
+                            <Button onClick={() => navigate(`/rezervacije/${rez.sifra}`)}>Promjena</Button>
+                            <Button variant="danger" onClick={() => obrisi(rez.sifra)}>Obriši</Button>
+                            <RezervacijaPDFGenerator
+                                rezervacija={rez}
+                                dogadjaj={dogadjaji.find(d => d.sifra === rez.dogadjajSifra)}
+                                korisnik={korisnici.find(k => k.sifra === rez.korisnikSifra)}
+                            />
                         </div>
 
                     </div>

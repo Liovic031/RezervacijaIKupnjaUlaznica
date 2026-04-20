@@ -29,6 +29,9 @@ async function dodaj(rezervacija) {
             ? 1
             : Math.max(...rezervacije.map(r => r.sifra)) + 1;
 
+    rezervacija.evidentirano = false;
+    rezervacija.datumEvidentiranja = null;
+    
     rezervacije.push(rezervacija);
     spremiUStorage(rezervacije);
 

@@ -1,5 +1,7 @@
 import { jsPDF } from "jspdf";
 import autoTable from "jspdf-autotable";
+import QRCode from "qrcode";
+
 
 export default function RezervacijaPDFGenerator({ rezervacija, dogadjaj, korisnik }) {
 
@@ -114,6 +116,22 @@ export default function RezervacijaPDFGenerator({ rezervacija, dogadjaj, korisni
                 0: { halign: "center" }
             }
         });
+
+        // QR kod URL
+        const url = `https://edunova5.origo.hr/rezervacije/evidentiraj/${rezervacija.sifra}`;
+        const qrDataUrl = await QRCode.toDataURL(url);
+
+        // Pozicija ispod tablice
+        const qrY = doc.lastAutoTable.finalY + 10;
+
+        // Centriranje QR koda
+        const qrSize = 40;
+        const pageWidth = doc.internal.pageSize.getWidth();
+        const qrX = (pageWidth - qrSize) / 2;
+
+        doc.addImage(qrDataUrl, "PNG", qrX, qrY, qrSize, qrSize);
+
+
 
         // footer
         const pageHeight = doc.internal.pageSize.height;
