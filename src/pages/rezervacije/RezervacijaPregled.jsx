@@ -121,13 +121,13 @@ export default function RezervacijaPregled() {
                         style={{ backgroundColor: "#f8f9fa" }}
                     >
                         <Row className="mt-3">
-                            <Col className="ms-3">
-                                <h5 className="mb-3">
+                            <Col className="m-2">
+                                <h5 className="mb-3 naslov-rezervacije">
                                     {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)?.naziv || "Nepoznat događaj"}
                                 </h5>
                             </Col>
                             <Col>
-                                <div className="d-flex gap-3 justify-content-end me-4">
+                                <div className="d-flex gap-3 justify-content-end m-2">
                                     <i
                                         className="bi bi-pencil-square fs-4 text-primary"
                                         role="button"
@@ -157,78 +157,75 @@ export default function RezervacijaPregled() {
                             </Col>
                         </Row>
                         <Row className="mb-3">
-                            <Col className="ms-3">
-                                <div>
-                                    <strong>Datum događaja:</strong>{" "}
-                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
-                                        <FormatDatuma datum={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).datumOdrzavanja} />
-                                    ) : "?"}
-                                </div>
+                            <Col xs={12} md={6}>
+                                <table className="table mt-2 table-custom">
+                                    <tbody>
+                                        <tr>
+                                            <th className="w-50">Datum događaja:</th>
+                                            <td>{dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
+                                                <FormatDatuma datum={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).datumOdrzavanja} />
+                                            ) : "?"}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Cijena:</th>
+                                            <td>{dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
+                                                <NumericFormat
+                                                    value={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).cijena * rezervacije.find(r => r.sifra === rez.sifra).brojeviKarata.length}
+                                                    displayType={'text'}
+                                                    thousandSeparator='.'
+                                                    decimalSeparator=','
+                                                    suffix={' €'}
+                                                    decimalScale={2}
+                                                    fixedDecimalScale
+                                                />
+                                            ) : "?"}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Korisnik:</th>
+                                            <td>{korisnici.find(k => k.sifra === rez.korisnikSifra)
+                                                ? `${korisnici.find(k => k.sifra === rez.korisnikSifra).ime} ${korisnici.find(k => k.sifra === rez.korisnikSifra).prezime}`
+                                                : "Nepoznato"}</td>
+                                        </tr>
+                                        <tr>
+                                            <th>Datum rezervacije:</th>
+                                            <td><FormatDatuma datum={rez.datumRezervacije} /></td>
+                                        </tr>
+                                        <tr>
+                                            <th>Status ulaza</th>
+                                            <td>{rez.evidentirano ? (
+                                                <span style={{ color: "green", fontWeight: "bold" }}>
+                                                    Evidentirano ✓
+                                                </span>
+                                            ) : (
+                                                <span>
+                                                    Nije evidentirano
+                                                </span>
+                                            )}</td>
+                                        </tr>
+                                        {rez.evidentirano && (
+                                            <tr>
+                                                <th>Datum evidentiranja:</th>
+                                                <td><FormatDatuma datum={rez.datumEvidentiranja} /></td>
+                                            </tr>
+                                        )}
+                                        <tr>
+                                            <th>Ukupan broj mjesta:</th>
+                                            <td>{dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
+                                                ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
+                                            }</td>
 
-                                <div>
-                                    <strong>Cijena:</strong>{" "}
-                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
-                                        <NumericFormat
-                                            value={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).cijena * rezervacije.find(r => r.sifra === rez.sifra).brojeviKarata.length}
-                                            displayType={'text'}
-                                            thousandSeparator='.'
-                                            decimalSeparator=','
-                                            suffix={' €'}
-                                            decimalScale={2}
-                                            fixedDecimalScale
-                                        />
-                                    ) : "?"}
-                                </div>
-
-                                <div>
-                                    <strong>Korisnik:</strong>{" "}
-                                    {korisnici.find(k => k.sifra === rez.korisnikSifra)
-                                        ? `${korisnici.find(k => k.sifra === rez.korisnikSifra).ime} ${korisnici.find(k => k.sifra === rez.korisnikSifra).prezime}`
-                                        : "Nepoznato"}
-                                </div>
-
-                                <div>
-                                    <strong>Datum rezervacije:</strong>{" "}
-                                    <FormatDatuma datum={rez.datumRezervacije} />
-                                </div>
-
-                                <div>
-                                    <strong>Status ulaza:</strong>{" "}
-                                    {rez.evidentirano ? (
-                                        <span style={{ color: "green", fontWeight: "bold" }}>
-                                            Evidentirano ✓
-                                        </span>
-                                    ) : (
-                                        <span>
-                                            Nije evidentirano
-                                        </span>
-                                    )}
-                                </div>
-
-                                {rez.evidentirano && (
-                                    <div>
-                                        <strong>Datum evidentiranja:</strong>{" "}
-                                        <FormatDatuma datum={rez.datumEvidentiranja} />
-                                    </div>
-                                )}
-
-
-                                <div>
-                                    <strong>Ukupan broj mjesta:</strong>{" "}
-                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
-                                        ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
-                                    }
-                                </div>
-
-                                <div>
-                                    <strong>Vaše karte:</strong>{" "}
-                                    {rez.brojeviKarata?.join(", ") || "-"}
-                                </div>
+                                        </tr>
+                                        <tr>
+                                            <th>Vaše karte:</th>
+                                            <td>{rez.brojeviKarata?.join(", ") || "-"}</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
                             </Col>
-                            <Col>
-                                <div>
-                                    <strong>Rezervirana mjesta:</strong>
-                                    <div className="d-flex flex-wrap gap-1 mt-2">
+                            <Col xs={12} md={6}>
+                                <div className="m-2">
+                                    <p className="naslov-mjesta">Rezervirana mjesta:</p>
+                                    <div className="d-flex flex-wrap gap-1 mt-2 overflow-auto" style={{ maxHeight: "250px" }}>
                                         {getSeatBoxes(
                                             rez,
                                             karte.filter(k => k.dogadjajSifra === rez.dogadjajSifra)

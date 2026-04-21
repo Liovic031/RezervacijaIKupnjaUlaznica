@@ -50,3 +50,23 @@ img{
   margin: 20px 0;
   flex-wrap: wrap;
 }
+
+.table-custom tbody tr th{
+    background-color: #f8f9fa; 
+}
+.table-custom tbody tr td{
+    background-color: #f8f9fa; 
+}
+
+/* linije između redova */
+.table-custom tbody tr{
+    border-bottom: 1px solid #ccd0d3; /* ista boja kao border kartice */
+}
+
+
+.table-custom tbody tr th, .naslov-rezervacije, .naslov-mjesta  {
+    color: #42474b; 
+    font-weight: 600;
+    width: 45%;
+}
+
