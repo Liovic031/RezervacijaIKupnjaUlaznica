@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react"
-import { Button } from "react-bootstrap"
+import { Button, Col, Row } from "react-bootstrap"
 import { Link, useNavigate } from "react-router-dom"
 import { NumericFormat } from "react-number-format"
 import RezervacijaService from "../../services/rezervacije/RezervacijaService"
@@ -8,7 +8,9 @@ import KorisnikService from "../../services/korisnici/KorisnikService"
 import { RouteNames } from "../../constants"
 import FormatDatuma from "../../components/ForamtDatuma"
 import KartaService from "../../services/karte/KartaService";
-import RezervacijaPDFGenerator from "../../components/RezervacijaPDFGenerator"
+import "bootstrap-icons/font/bootstrap-icons.css";
+import { RezervacijaPDFGenerator } from "../../components/RezervacijaPDFGenerator"
+
 
 export default function RezervacijaPregled() {
 
@@ -116,95 +118,123 @@ export default function RezervacijaPregled() {
                         className="p-3 border rounded shadow-sm"
                         style={{ backgroundColor: "#f8f9fa" }}
                     >
-                        <h5 className="mb-3">
-                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)?.naziv || "Nepoznat događaj"}
-                        </h5>
+                        <Row className="mt-3">
+                            <Col className="ms-3">
+                                <h5 className="mb-3">
+                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)?.naziv || "Nepoznat događaj"}
+                                </h5>
+                            </Col>
+                            <Col>
+                                <div className="d-flex gap-3 justify-content-end me-4">
+                                    <i
+                                        className="bi bi-pencil-square fs-4 text-primary"
+                                        role="button"
+                                        onClick={() => navigate(`/rezervacije/${rez.sifra}`)}
+                                    ></i>
 
-                        <div>
-                            <strong>Datum događaja:</strong>{" "}
-                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
-                                <FormatDatuma datum={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).datumOdrzavanja} />
-                            ) : "?"}
-                        </div>
+                                    <i
+                                        className="bi bi-trash fs-4 text-danger"
+                                        role="button"
+                                        onClick={() => obrisi(rez.sifra)}
+                                    ></i>
 
-                        <div>
-                            <strong>Cijena:</strong>{" "}
-                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
-                                <NumericFormat
-                                    value={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).cijena * rezervacije.find(r => r.sifra === rez.sifra).brojeviKarata.length}
-                                    displayType={'text'}
-                                    thousandSeparator='.'
-                                    decimalSeparator=','
-                                    suffix={' €'}
-                                    decimalScale={2}
-                                    fixedDecimalScale
-                                />
-                            ) : "?"}
-                        </div>
+                                    <i
+                                        className="bi bi-file-earmark-pdf fs-4 text-success"
+                                        role="button"
+                                        onClick={() =>
+                                            RezervacijaPDFGenerator(
+                                                rez,
+                                                dogadjaji.find(d => d.sifra === rez.dogadjajSifra),
+                                                korisnici.find(k => k.sifra === rez.korisnikSifra)
+                                            )
+                                        }
+                                    >
+                                    </i>
+                                </div>
 
-                        <div>
-                            <strong>Korisnik:</strong>{" "}
-                            {korisnici.find(k => k.sifra === rez.korisnikSifra)
-                                ? `${korisnici.find(k => k.sifra === rez.korisnikSifra).ime} ${korisnici.find(k => k.sifra === rez.korisnikSifra).prezime}`
-                                : "Nepoznato"}
-                        </div>
+                            </Col>
+                        </Row>
+                        <Row className="mb-3">
+                            <Col className="ms-3">
+                                <div>
+                                    <strong>Datum događaja:</strong>{" "}
+                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
+                                        <FormatDatuma datum={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).datumOdrzavanja} />
+                                    ) : "?"}
+                                </div>
 
-                        <div>
-                            <strong>Datum rezervacije:</strong>{" "}
-                            <FormatDatuma datum={rez.datumRezervacije} />
-                        </div>
+                                <div>
+                                    <strong>Cijena:</strong>{" "}
+                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
+                                        <NumericFormat
+                                            value={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).cijena * rezervacije.find(r => r.sifra === rez.sifra).brojeviKarata.length}
+                                            displayType={'text'}
+                                            thousandSeparator='.'
+                                            decimalSeparator=','
+                                            suffix={' €'}
+                                            decimalScale={2}
+                                            fixedDecimalScale
+                                        />
+                                    ) : "?"}
+                                </div>
 
-                        <div>
-                            <strong>Status ulaza:</strong>{" "}
-                            {rez.evidentirano ? (
-                                <span style={{ color: "green", fontWeight: "bold" }}>
-                                    Evidentirano ✓
-                                </span>
-                            ) : (
-                                <span>
-                                    Nije evidentirano
-                                </span>
-                            )}
-                        </div>
+                                <div>
+                                    <strong>Korisnik:</strong>{" "}
+                                    {korisnici.find(k => k.sifra === rez.korisnikSifra)
+                                        ? `${korisnici.find(k => k.sifra === rez.korisnikSifra).ime} ${korisnici.find(k => k.sifra === rez.korisnikSifra).prezime}`
+                                        : "Nepoznato"}
+                                </div>
 
-                        {rez.evidentirano && (
-                            <div>
-                                <strong>Datum evidentiranja:</strong>{" "}
-                                <FormatDatuma datum={rez.datumEvidentiranja} />
-                            </div>
-                        )}
+                                <div>
+                                    <strong>Datum rezervacije:</strong>{" "}
+                                    <FormatDatuma datum={rez.datumRezervacije} />
+                                </div>
 
+                                <div>
+                                    <strong>Status ulaza:</strong>{" "}
+                                    {rez.evidentirano ? (
+                                        <span style={{ color: "green", fontWeight: "bold" }}>
+                                            Evidentirano ✓
+                                        </span>
+                                    ) : (
+                                        <span>
+                                            Nije evidentirano
+                                        </span>
+                                    )}
+                                </div>
 
-                        <div>
-                            <strong>Ukupan broj mjesta:</strong>{" "}
-                            {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
-                                ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
-                            }
-                        </div>
-
-                        <div>
-                            <strong>Vaše karte:</strong>{" "}
-                            {rez.brojeviKarata?.join(", ") || "-"}
-                        </div>
-
-                        <div className="mt-3">
-                            <strong>Rezervirana mjesta:</strong>
-                            <div className="d-flex flex-wrap gap-1">
-                                {getSeatBoxes(
-                                    rez,
-                                    karte.filter(k => k.dogadjajSifra === rez.dogadjajSifra)
+                                {rez.evidentirano && (
+                                    <div>
+                                        <strong>Datum evidentiranja:</strong>{" "}
+                                        <FormatDatuma datum={rez.datumEvidentiranja} />
+                                    </div>
                                 )}
-                            </div>
-                        </div>
-                        <div className="mt-3 d-flex gap-2">
-                            <Button onClick={() => navigate(`/rezervacije/${rez.sifra}`)}>Promjena</Button>
-                            <Button variant="danger" onClick={() => obrisi(rez.sifra)}>Obriši</Button>
-                            <RezervacijaPDFGenerator
-                                rezervacija={rez}
-                                dogadjaj={dogadjaji.find(d => d.sifra === rez.dogadjajSifra)}
-                                korisnik={korisnici.find(k => k.sifra === rez.korisnikSifra)}
-                            />
-                        </div>
+
+
+                                <div>
+                                    <strong>Ukupan broj mjesta:</strong>{" "}
+                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
+                                        ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
+                                    }
+                                </div>
+
+                                <div>
+                                    <strong>Vaše karte:</strong>{" "}
+                                    {rez.brojeviKarata?.join(", ") || "-"}
+                                </div>
+                            </Col>
+                            <Col>
+                                <div>
+                                    <strong>Rezervirana mjesta:</strong>
+                                    <div className="d-flex flex-wrap gap-1 mt-2">
+                                        {getSeatBoxes(
+                                            rez,
+                                            karte.filter(k => k.dogadjajSifra === rez.dogadjajSifra)
+                                        )}
+                                    </div>
+                                </div>
+                            </Col>
+                        </Row>
 
                     </div>
                 ))}
