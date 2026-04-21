@@ -6,6 +6,8 @@ import FormatDatuma from "../../components/ForamtDatuma"
 import { GrClose, GrValidate } from "react-icons/gr"
 import { RouteNames } from "../../constants"
 import { Link, useNavigate } from "react-router-dom"
+import "bootstrap-icons/font/bootstrap-icons.css";
+
 
 export default function DogadjajPregled() {
 
@@ -41,9 +43,11 @@ export default function DogadjajPregled() {
 
     return (
         <>
-            <Link to={RouteNames.DOGADJAJI_NOVI} className="btn btn-success w-100 my-3">
-                Dodavanje novog događaja
-            </Link>
+            <div className="d-flex justify-content-center my-1">
+                <Link to={RouteNames.DOGADJAJI_NOVI} style={{ color: "#353535" }} className="fs-1">
+                    <i className="bi bi-plus-circle-fill"></i>
+                </Link>
+            </div>
 
             <Table>
                 <thead>
@@ -77,9 +81,17 @@ export default function DogadjajPregled() {
                             </td>
                             <td>{dogadjaj.aktivan ? <GrValidate size={25} color='green' /> : <GrClose size={25} color='red' />}</td>
                             <td>
-                                <Button onClick={() => { navigate(`/dogadjaji/${dogadjaj.sifra}`) }}>Promjena</Button>
+                                <i
+                                    className="bi bi-pencil-square fs-4 text-primary"
+                                    role="button"
+                                    onClick={() => navigate(`/dogadjaji/${dogadjaj.sifra}`)}
+                                ></i>
                                 &nbsp;&nbsp;
-                                <Button variant="danger" onClick={() => { obrisi(dogadjaj.sifra) }}>Obriši</Button>
+                                <i
+                                    className="bi bi-trash fs-4 text-danger"
+                                    role="button"
+                                    onClick={() => obrisi(dogadjaj.sifra)}
+                                ></i>
                             </td>
                         </tr>
                     ))}
@@ -87,4 +99,4 @@ export default function DogadjajPregled() {
             </Table>
         </>
     )
-}
+}                                  

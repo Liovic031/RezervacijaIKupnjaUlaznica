@@ -124,16 +124,16 @@ export default function DogadjajNovi() {
                             <hr />
 
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <Button type="submit" variant="success" className="px-4">
+                                    Dodaj
+                                </Button>
+
                                 <Link
                                     to={RouteNames.DOGADJAJI}
                                     className="btn btn-danger px-4"
                                 >
                                     Odustani
                                 </Link>
-
-                                <Button type="submit" variant="success" className="px-4">
-                                    Dodaj novi događaj
-                                </Button>
                             </div>
                         </Card.Body>
                     </Card>

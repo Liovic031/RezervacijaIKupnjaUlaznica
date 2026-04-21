@@ -34,9 +34,11 @@ export default function KorisnikPregled() {
 
     return (
         <>
-            <Link to={RouteNames.KORISNICI_NOVI} className="btn btn-success w-100 my-3">
-                Dodavanje novog korisnika
-            </Link>
+            <div className="d-flex justify-content-center my-1">
+                <Link to={RouteNames.KORISNICI_NOVI} style={{ color: "#353535" }} className="fs-1">
+                    <i className="bi bi-plus-circle-fill"></i>
+                </Link>
+            </div>
 
             <Table>
                 <thead>
@@ -56,13 +58,17 @@ export default function KorisnikPregled() {
                             <td>{korisnik.email}</td>
                             <td><FormatDatuma datum={korisnik.datumKreiranja} /></td>
                             <td>
-                                <Button onClick={() => navigate(`/korisnici/${korisnik.sifra}`)}>
-                                    Promjena
-                                </Button>
+                                <i
+                                    className="bi bi-pencil-square fs-4 text-primary"
+                                    role="button"
+                                    onClick={() => navigate(`/korisnici/${korisnik.sifra}`)}
+                                ></i>
                                 &nbsp;&nbsp;
-                                <Button variant="danger" onClick={() => obrisi(korisnik.sifra)}>
-                                    Obriši
-                                </Button>
+                                <i
+                                    className="bi bi-trash fs-4 text-danger"
+                                    role="button"
+                                    onClick={() => obrisi(korisnik.sifra)}
+                                ></i>
                             </td>
                         </tr>
                     ))}
@@ -70,4 +76,4 @@ export default function KorisnikPregled() {
             </Table>
         </>
     );
-}
+}                               

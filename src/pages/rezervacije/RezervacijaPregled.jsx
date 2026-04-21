@@ -107,9 +107,11 @@ export default function RezervacijaPregled() {
 
     return (
         <>
-            <Link to={RouteNames.REZERVACIJE_NOVE} className="btn btn-success w-100 my-3">
-                Dodavanje nove rezervacije
-            </Link>
+            <div className="d-flex justify-content-center my-1">
+                <Link to={RouteNames.REZERVACIJE_NOVE} style={{ color: "#353535" }} className="fs-1">
+                    <i className="bi bi-plus-circle-fill"></i>
+                </Link>
+            </div>
 
             <div className="d-flex flex-column gap-3 my-3">
                 {rezervacije.map(rez => (

@@ -117,13 +117,13 @@ export default function KorisnikPromjena() {
                             <hr />
 
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
+                                <Button type="submit" variant="success" className="px-4">
+                                    Spremi
+                                </Button>
+
                                 <Link to={RouteNames.KORISNICI} className="btn btn-danger px-4">
                                     Odustani
-                                </Link>
-
-                                <Button type="submit" variant="success" className="px-4">
-                                    Spremi promjene
-                                </Button>
+                                </Link>  
                             </div>
                         </Card.Body>
                     </Card>

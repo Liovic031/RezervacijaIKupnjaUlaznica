@@ -172,13 +172,14 @@ export default function DogadjajPromjena() {
                             <hr />
 
                             <div className="d-grid gap-2 d-md-flex justify-content-md-end mt-4">
-                                <Link to={RouteNames.DOGADJAJI} className="btn btn-danger px-4">
-                                    Odustani
-                                </Link>
-
                                 <Button type="submit" variant="success" className="px-4">
                                     Promijeni
                                 </Button>
+
+                                <Link to={RouteNames.DOGADJAJI} className="btn btn-danger px-4">
+                                    Odustani
+                                </Link>
+   
                             </div>
                         </Card.Body>
                     </Card>
