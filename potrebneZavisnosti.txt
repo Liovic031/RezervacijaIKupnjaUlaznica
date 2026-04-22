@@ -5,10 +5,11 @@ npm install react-bootstrap bootstrap
 npm install react-router-dom
 npm install react-number-format
 
+// bootstrap ikone
+npm install bootstrap-icons
 
 // lottie animacija
 npm install @lottiefiles/dotlottie-react
-
 
 // PDF
 npm install jspdf jspdf-autotable

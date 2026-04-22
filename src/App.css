@@ -29,7 +29,7 @@ img{
 }
 
 .statistikaPanel {
-  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  background: linear-gradient(135deg, #151724 0%, #40215f 100%);
   transform: translateY(0);
   transition: transform 0.3s ease;
   width: 300px;
