@@ -108,7 +108,7 @@ export default function RezervacijaPregled() {
     return (
         <>
             <div className="d-flex justify-content-center my-1">
-                <Link to={RouteNames.REZERVACIJE_NOVE} style={{ color: "#353535" }} className="fs-1">
+                <Link to={RouteNames.REZERVACIJE_NOVE} style={{ color: "#353535" }} className="fs-1 dodaj_item">
                     <i className="bi bi-plus-circle-fill"></i>
                 </Link>
             </div>

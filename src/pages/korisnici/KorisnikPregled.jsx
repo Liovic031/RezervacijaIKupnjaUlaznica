@@ -84,7 +84,7 @@ export default function KorisnikPregled() {
     return (
         <>
             <div className="d-flex justify-content-center my-1">
-                <Link to={RouteNames.KORISNICI_NOVI} style={{ color: "#353535" }} className="fs-1">
+                <Link to={RouteNames.KORISNICI_NOVI} style={{ color: "#353535" }} className="fs-1 dodaj_item">
                     <i className="bi bi-plus-circle-fill"></i>
                 </Link>
             </div>

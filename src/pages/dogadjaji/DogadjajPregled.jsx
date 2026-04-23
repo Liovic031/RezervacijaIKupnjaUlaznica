@@ -49,7 +49,7 @@ export default function DogadjajPregled() {
     return (
         <>
             <div className="d-flex justify-content-center my-1">
-                <Link to={RouteNames.DOGADJAJI_NOVI} className="fs-1 dodaj_dogadjaj">
+                <Link to={RouteNames.DOGADJAJI_NOVI} className="fs-1 dodaj_item">
                     <i className="bi bi-plus-circle-fill"></i>
                 </Link>
             </div>
