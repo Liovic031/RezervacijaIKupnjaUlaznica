@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react"
 import DogadjajService from "../../services/dogadjaji/DogadjajService"
-import { Button, Table } from "react-bootstrap"
+import { Button, Card, CardBody, Col, Row } from "react-bootstrap"
 import { NumericFormat } from "react-number-format"
 import FormatDatuma from "../../components/ForamtDatuma"
 import { GrClose, GrValidate } from "react-icons/gr"
@@ -40,63 +40,85 @@ export default function DogadjajPregled() {
         ucitajDogadjaje()
     }
 
+    const [visibleCount, setVisibleCount] = useState(12);
+    const ucitajJos = () => {
+        setVisibleCount(prev => prev + 9);
+    };
+
 
     return (
         <>
             <div className="d-flex justify-content-center my-1">
-                <Link to={RouteNames.DOGADJAJI_NOVI} style={{ color: "#353535" }} className="fs-1">
+                <Link to={RouteNames.DOGADJAJI_NOVI} className="fs-1 dodaj_dogadjaj">
                     <i className="bi bi-plus-circle-fill"></i>
                 </Link>
             </div>
 
-            <Table>
-                <thead>
-                    <tr>
-                        <th>Naziv</th>
-                        <th>Lokacija</th>
-                        <th>Datum</th>
-                        <th>Broj mjesta</th>
-                        <th>Cijena</th>
-                        <th>Aktivan</th>
-                        <th>Akcija</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    {dogadjaji && dogadjaji.map((dogadjaj) => (
-                        <tr key={dogadjaj.sifra}>
-                            <td>{dogadjaj.naziv}</td>
-                            <td>{dogadjaj.lokacija}</td>
-                            <td><FormatDatuma datum={dogadjaj.datumOdrzavanja} /></td>
-                            <td>{dogadjaj.brojMjesta}</td>
-                            <td>
-                                <NumericFormat
-                                    value={dogadjaj.cijena}
-                                    displayType={'text'}
-                                    thousandSeparator='.'
-                                    decimalSeparator=','
-                                    suffix={' €'}
-                                    decimalScale={2}
-                                    fixedDecimalScale
-                                />
-                            </td>
-                            <td>{dogadjaj.aktivan ? <GrValidate size={25} color='green' /> : <GrClose size={25} color='red' />}</td>
-                            <td>
-                                <i
-                                    className="bi bi-pencil-square fs-4 text-primary"
-                                    role="button"
-                                    onClick={() => navigate(`/dogadjaji/${dogadjaj.sifra}`)}
-                                ></i>
-                                &nbsp;&nbsp;
-                                <i
-                                    className="bi bi-trash fs-4 text-danger"
-                                    role="button"
-                                    onClick={() => obrisi(dogadjaj.sifra)}
-                                ></i>
-                            </td>
-                        </tr>
-                    ))}
-                </tbody>
-            </Table>
+            <Row xs={1} md={2} lg={3} xxl={4}>
+                {dogadjaji && dogadjaji.slice(0, visibleCount).map((dogadjaj) => (
+                    <Col key={dogadjaj.sifra} className="mb-4">
+                        <Card className="card-dogadjaj h-100">
+
+                            <div className="d-flex justify-content-between align-items-start p-3 card-header-line">
+                                <Card.Title className="mt-1 fs-5">{dogadjaj.naziv}</Card.Title>
+                                <div className="kartica_ikone d-flex gap-2">
+                                    <i
+                                        className="bi bi-pencil-square fs-4 text-primary"
+                                        role="button"
+                                        onClick={() => navigate(`/dogadjaji/${dogadjaj.sifra}`)}
+                                    ></i>
+
+                                    <i
+                                        className="bi bi-trash fs-4 text-danger"
+                                        role="button"
+                                        onClick={() => obrisi(dogadjaj.sifra)}
+                                    ></i>
+                                </div>
+                            </div>
+
+                            <Card.Body className="pt-3">
+                                <Card.Text>
+                                    <span className="card-label">Lokacija:</span> {dogadjaj.lokacija}
+                                </Card.Text>
+                                <Card.Text>
+                                    <span className="card-label">Datum održavanja:</span>{' '}
+                                    <FormatDatuma datum={dogadjaj.datumOdrzavanja} />
+                                </Card.Text>
+                                <Card.Text>
+                                    <span className="card-label">Broj slobodnih mjesta:</span> {dogadjaj.brojMjesta}
+                                </Card.Text>
+                                <Card.Text>
+                                    <span className="card-label">Cijena:</span>{' '}
+                                    <NumericFormat
+                                        value={dogadjaj.cijena}
+                                        displayType={'text'}
+                                        thousandSeparator='.'
+                                        decimalSeparator=','
+                                        suffix={' €'}
+                                        decimalScale={2}
+                                        fixedDecimalScale
+                                    />
+                                </Card.Text>
+                                <Card.Text>
+                                    <span className="card-label">Aktivnost:</span>{' '}
+                                    {dogadjaj.aktivan
+                                        ? <GrValidate size={22} color='green' />
+                                        : <GrClose size={22} color='red' />}
+                                </Card.Text>
+                            </Card.Body>
+
+                        </Card>
+                    </Col>
+
+                ))}
+            </Row>
+            {visibleCount < dogadjaji.length && (
+                <div className="text-center mt-4">
+                    <Button className="ucitaj" onClick={ucitajJos}>
+                        Učitaj više
+                    </Button>
+                </div>
+            )}
         </>
     )
 }                                  

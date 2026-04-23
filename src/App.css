@@ -70,3 +70,41 @@ img{
     width: 45%;
 }
 
+.ucitaj{
+  border: none;
+  background-color: #353535;
+  color: white;
+  border-radius: 2rem;
+  margin-bottom: 10px;
+}
+.ucitaj:hover{
+  background-color: #4e4e4e;
+}
+.ucitaj:active {
+  background-color: #353535 !important;
+}
+
+.dodaj_dogadjaj{
+  color: #353535;
+}
+.dodaj_dogadjaj:hover{
+  color: #4e4e4e;
+}
+
+.card-dogadjaj {
+  background-color: #f8f9fa;
+  border-radius: 0.75rem;
+  border: none;
+  box-shadow: 0 2px 6px rgba(0,0,0,0.08);
+ 
+}
+
+.card-label {
+  font-weight: 600;
+  color: #42474b;
+}
+
+.card-header-line {
+  border-bottom: 1px solid #dee2e6;
+  
+}
