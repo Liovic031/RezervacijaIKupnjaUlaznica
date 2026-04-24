@@ -7,6 +7,7 @@ import { GrClose, GrValidate } from "react-icons/gr"
 import { RouteNames } from "../../constants"
 import { Link, useNavigate } from "react-router-dom"
 import "bootstrap-icons/font/bootstrap-icons.css";
+import RezervacijaService from "../../services/rezervacije/RezervacijaService"
 
 
 export default function DogadjajPregled() {
@@ -32,13 +33,34 @@ export default function DogadjajPregled() {
 
 
     //brisanje podataka
-    async function obrisi(sifra) {
-        if (!confirm('sigurno obrisati')) {
-            return
-        }
-        await DogadjajService.obrisi(sifra)
-        ucitajDogadjaje()
+    async function brojRezervacijaZaDogadjaj(sifraDogadjaja) {
+        const odgovor = await RezervacijaService.get();
+        if (!odgovor.success) return 0;
+
+        return odgovor.data.filter(r => r.dogadjajSifra === parseInt(sifraDogadjaja)).length;
     }
+
+    async function obrisi(sifra) {
+
+        const broj = await brojRezervacijaZaDogadjaj(sifra);
+
+        let poruka = 'Jeste li sigurni da želite obrisati događaj?';
+        if (broj == 1){
+            poruka = `Ovaj događaj ima ${broj} rezervaciju. Brisanjem događaja obrisat će se i rezervacija za događaj. Želite li nastaviti?`;
+        }
+        
+        if (broj > 1) {
+            poruka = `Ovaj događaj ima ${broj} rezervacija. Brisanjem događaja obrisat će se i sve rezervacije za događaj. Želite li nastaviti?`;
+        }
+
+        if (!confirm(poruka)) {
+            return;
+        }
+
+        await DogadjajService.obrisi(sifra);
+        ucitajDogadjaje();
+    }
+
 
     const [visibleCount, setVisibleCount] = useState(12);
     const ucitajJos = () => {

@@ -5,9 +5,10 @@ import FormatDatuma from "../../components/ForamtDatuma";
 import { RouteNames } from "../../constants";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
+import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 
 export default function KorisnikPregled() {
-    //dohvacanje i brisanje korisnika
+    //dohvacanje
     const navigate = useNavigate();
     const [korisnici, setKorisnici] = useState([]);
     async function ucitajKorisnike() {
@@ -21,10 +22,32 @@ export default function KorisnikPregled() {
     useEffect(() => {
         ucitajKorisnike();
     }, []);
+
+    //brisanje korisnika
+    async function brojRezervacijaKorisnika(sifraKorisnika){
+        const odgovor = await RezervacijaService.get();
+        if (!odgovor.success) return 0;
+
+        return odgovor.data.filter(r => r.korisnikSifra === parseInt(sifraKorisnika)).length;
+    }
+
     async function obrisi(sifra) {
-        if (!confirm('Sigurno obrisati?')) {
+
+        const broj = await brojRezervacijaKorisnika(sifra);
+
+        let poruka = 'Jeste li sigurni da želite obrisati događaj?';
+
+        if (broj == 1) {
+            poruka = `Ovaj korisnik ima ${broj} rezervaciju. Brisanjem korisnika obrisat će se i njegova rezervacija. Želite li nastaviti?`;
+        }
+        if (broj > 1) {
+            poruka = `Ovaj korisnik ima ${broj} rezervacija. Brisanjem korisnika obrisat će se i sve njegove rezervacije. Želite li nastaviti?`;
+        }
+
+        if (!confirm(poruka)) {
             return;
         }
+
         await KorisnikService.obrisi(sifra);
         ucitajKorisnike();
     }
