@@ -48,8 +48,10 @@ export default function DogadjajPregled() {
         if (broj == 1){
             poruka = `Ovaj događaj ima ${broj} rezervaciju. Brisanjem događaja obrisat će se i rezervacija za događaj. Želite li nastaviti?`;
         }
-        
-        if (broj > 1) {
+        if (broj >= 2 && broj <= 4){
+            poruka = `Ovaj događaj ima ${broj} rezervacije. Brisanjem događaja obrisat će se i rezervacije za događaj. Želite li nastaviti?`;
+        }
+        if (broj > 4) {
             poruka = `Ovaj događaj ima ${broj} rezervacija. Brisanjem događaja obrisat će se i sve rezervacije za događaj. Želite li nastaviti?`;
         }
 

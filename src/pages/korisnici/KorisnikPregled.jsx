@@ -40,7 +40,10 @@ export default function KorisnikPregled() {
         if (broj == 1) {
             poruka = `Ovaj korisnik ima ${broj} rezervaciju. Brisanjem korisnika obrisat će se i njegova rezervacija. Želite li nastaviti?`;
         }
-        if (broj > 1) {
+        if (broj >= 2 && broj <= 4){
+            poruka = `Ovaj korisnik ima ${broj} rezervacije. Brisanjem korisnika obrisat će se i sve njegove rezervacije. Želite li nastaviti?`;
+        }
+        if (broj > 4) {
             poruka = `Ovaj korisnik ima ${broj} rezervacija. Brisanjem korisnika obrisat će se i sve njegove rezervacije. Želite li nastaviti?`;
         }
 
