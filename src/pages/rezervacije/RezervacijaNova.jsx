@@ -28,22 +28,32 @@ export default function RezervacijaNova() {
     }
 
     async function ucitajKarte(dogadjajSifra) {
+        // 1) Učitaj sve karte za događaj
         const o = await KartaService.getByDogadjaj(dogadjajSifra);
 
+        // 2) Učitaj sve rezervacije
         const rezervacije = await RezervacijaService.get();
 
-        const filtrirane = o.data.filter(k => {
-            // karta je slobodna ako:
-            // nije rezervirana
-            // ili rezervacija više ne postoji
-            return (
+        // 3) Učitaj događaj da znamo novi broj mjesta
+        const dog = await DogadjajService.getBySifra(dogadjajSifra);
+
+        if (!dog.success) return;
+
+        const maxBroj = dog.data.brojMjesta;
+
+        // 4) Filtriraj karte:
+        //    - samo karte do maxBroj
+        //    - samo karte koje su slobodne ili čija rezervacija više ne postoji
+        const filtrirane = o.data
+            .filter(k => k.broj <= maxBroj)
+            .filter(k =>
                 !k.rezervirano ||
                 !rezervacije.data.some(r => r.sifra === k.rezervacijaSifra)
             );
-        });
 
         setKarte(filtrirane);
     }
+
 
     useEffect(() => {
         ucitajKorisnike();

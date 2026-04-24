@@ -35,15 +35,29 @@ export default function RezervacijaPromjena() {
     }
 
     async function ucitajKarte(dogadjajSifra, rezSifra) {
+        // 1) Učitaj sve karte za događaj
         const o = await KartaService.getByDogadjaj(dogadjajSifra);
 
-        const filtrirane = o.data.filter(k =>
-            !k.rezervirano ||
-            k.rezervacijaSifra === rezSifra ||
-            odabraneKarte.includes(k.broj)
-        );
+        // 2) Učitaj događaj da znamo novi broj mjesta
+        const dog = await DogadjajService.getBySifra(dogadjajSifra);
+        if (!dog.success) return;
+
+        const maxBroj = dog.data.brojMjesta;
+
+        // 3) Filtriraj karte:
+        const filtrirane = o.data
+            // samo karte do maxBroj
+            .filter(k => k.broj <= maxBroj)
+            // slobodne ili rezervirane od ove rezervacije
+            .filter(k =>
+                !k.rezervirano ||
+                k.rezervacijaSifra === rezSifra ||
+                odabraneKarte.includes(k.broj)
+            );
+
         setKarte(filtrirane);
     }
+
 
     useEffect(() => {
         ucitajSve();

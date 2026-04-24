@@ -102,11 +102,11 @@ export default function RezervacijaPregled() {
             );
         });
     }
-        //ucitaj jos
-        const [visibleCount, setVisibleCount] = useState(4);
-        const ucitajJos = () => {
-            setVisibleCount(prev => prev + 4);
-        };
+    //ucitaj jos
+    const [visibleCount, setVisibleCount] = useState(4);
+    const ucitajJos = () => {
+        setVisibleCount(prev => prev + 4);
+    };
 
 
     return (
@@ -232,7 +232,12 @@ export default function RezervacijaPregled() {
                                     <div className="d-flex flex-wrap gap-1 mt-2 overflow-auto" style={{ maxHeight: "250px" }}>
                                         {getSeatBoxes(
                                             rez,
-                                            karte.filter(k => k.dogadjajSifra === rez.dogadjajSifra)
+                                            karte
+                                                .filter(k => k.dogadjajSifra === rez.dogadjajSifra)
+                                                .filter(k => {
+                                                    const dog = dogadjaji.find(d => d.sifra === rez.dogadjajSifra);
+                                                    return dog ? k.broj <= dog.brojMjesta : true;
+                                                })
                                         )}
                                     </div>
                                 </div>

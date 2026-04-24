@@ -32,10 +32,16 @@ export default function DogadjajPromjena() {
     }, [])
 
     async function promjeni(dogadjaj) {
-        await DogadjajService.promjeni(params.sifra, dogadjaj).then(() => {
-            navigate(RouteNames.DOGADJAJI)
-        })
+        const odgovor = await DogadjajService.promjeni(params.sifra, dogadjaj);
+
+        if (!odgovor.success) {
+            alert(odgovor.message);
+            return;
+        }
+
+        navigate(RouteNames.DOGADJAJI);
     }
+
 
     function odradiSubmit(e) {
         e.preventDefault();
@@ -122,7 +128,7 @@ export default function DogadjajPromjena() {
                                             type="date"
                                             name="datumOdrzavanja"
                                             defaultValue={dogadjaj.datumOdrzavanja}
-                                            onClick={(e) => e.target.showPicker()} 
+                                            onClick={(e) => e.target.showPicker()}
                                             onFocus={(e) => e.target.showPicker()}
                                         />
                                     </Form.Group>
@@ -179,7 +185,7 @@ export default function DogadjajPromjena() {
                                 <Link to={RouteNames.DOGADJAJI} className="btn btn-danger px-4">
                                     Odustani
                                 </Link>
-   
+
                             </div>
                         </Card.Body>
                     </Card>
