@@ -102,7 +102,11 @@ export default function RezervacijaPregled() {
             );
         });
     }
-
+        //ucitaj jos
+        const [visibleCount, setVisibleCount] = useState(4);
+        const ucitajJos = () => {
+            setVisibleCount(prev => prev + 4);
+        };
 
 
     return (
@@ -114,7 +118,7 @@ export default function RezervacijaPregled() {
             </div>
 
             <div className="d-flex flex-column gap-3 my-3">
-                {rezervacije.map(rez => (
+                {rezervacije.slice(0, visibleCount).map(rez => (
                     <div
                         key={rez.sifra}
                         className="p-3 border rounded shadow-sm"
@@ -238,6 +242,13 @@ export default function RezervacijaPregled() {
                     </div>
                 ))}
             </div>
+            {visibleCount < rezervacije.length && (
+                <div className="text-center mt-4">
+                    <Button className="ucitaj" onClick={ucitajJos}>
+                        Učitaj više
+                    </Button>
+                </div>
+            )}
         </>
     )
 }

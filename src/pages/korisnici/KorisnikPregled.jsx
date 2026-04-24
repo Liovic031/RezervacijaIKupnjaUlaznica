@@ -81,6 +81,12 @@ export default function KorisnikPregled() {
         return sorted;
     }
 
+    //ucitaj jos
+    const [visibleCount, setVisibleCount] = useState(15);
+    const ucitajJos = () => {
+        setVisibleCount(prev => prev + 15);
+    };
+
     return (
         <>
             <div className="d-flex justify-content-center my-1">
@@ -100,7 +106,7 @@ export default function KorisnikPregled() {
                         </tr>
                     </thead>
                     <tbody>
-                        {sortedKorisnici() && sortedKorisnici().map((korisnik) => (
+                        {sortedKorisnici() && sortedKorisnici().slice(0, visibleCount).map((korisnik) => (
                             <tr key={korisnik.sifra}>
                                 <td>{korisnik.ime}</td>
                                 <td>{korisnik.prezime}</td>
@@ -124,6 +130,13 @@ export default function KorisnikPregled() {
                     </tbody>
                 </Table>
             </div>
+            {visibleCount < sortedKorisnici().length && (
+                <div className="text-center mt-4">
+                    <Button className="ucitaj" onClick={ucitajJos}>
+                        Učitaj više
+                    </Button>
+                </div>
+            )}
         </>
     );
 }                               
