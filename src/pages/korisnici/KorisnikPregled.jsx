@@ -24,7 +24,7 @@ export default function KorisnikPregled() {
     }, []);
 
     //brisanje korisnika
-    async function brojRezervacijaKorisnika(sifraKorisnika){
+    async function brojRezervacijaKorisnika(sifraKorisnika) {
         const odgovor = await RezervacijaService.get();
         if (!odgovor.success) return 0;
 
@@ -40,7 +40,7 @@ export default function KorisnikPregled() {
         if (broj == 1) {
             poruka = `Ovaj korisnik ima ${broj} rezervaciju. Brisanjem korisnika obrisat će se i njegova rezervacija. Želite li nastaviti?`;
         }
-        if (broj >= 2 && broj <= 4){
+        if (broj >= 2 && broj <= 4) {
             poruka = `Ovaj korisnik ima ${broj} rezervacije. Brisanjem korisnika obrisat će se i sve njegove rezervacije. Želite li nastaviti?`;
         }
         if (broj > 4) {
@@ -77,11 +77,13 @@ export default function KorisnikPregled() {
     }
 
     const sortedKorisnici = () => {
-        if (!korisnici || sortConfig.direction === null) {
-            return korisnici;
+        const lista = filtriraniKorisnici();
+
+        if (!lista || sortConfig.direction === null) {
+            return lista;
         }
 
-        const sorted = [...korisnici].sort((a, b) => {
+        const sorted = [...lista].sort((a, b) => {
             let aValue = a[sortConfig.key];
             let bValue = b[sortConfig.key];
 
@@ -113,6 +115,27 @@ export default function KorisnikPregled() {
         setVisibleCount(prev => prev + 15);
     };
 
+    // search korisnika
+    const [searchTerm, setSearchTerm] = useState('');
+    const handleSearchChange = (e) => {
+        setSearchTerm(e.target.value);
+        setVisibleCount(15); // reset paginacije
+    };
+    const filtriraniKorisnici = () => {
+        if (!searchTerm.trim()) return korisnici;
+
+        const term = searchTerm.toLowerCase().trim();
+
+        return korisnici.filter(k =>
+            (k.ime || '').toLowerCase().includes(term) ||
+            (k.prezime || '').toLowerCase().includes(term) ||
+            (k.email || '').toLowerCase().includes(term)
+        );
+    };
+
+
+
+
     return (
         <>
             <div className="d-flex justify-content-center my-1">
@@ -120,6 +143,16 @@ export default function KorisnikPregled() {
                     <i className="bi bi-plus-circle-fill"></i>
                 </Link>
             </div>
+            <div className="my-3">
+                <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Pretraži korisnike (ime, prezime, email)..."
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                />
+            </div>
+
             <div className="table-responsive">
                 <Table>
                     <thead>
