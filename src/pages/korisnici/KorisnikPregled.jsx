@@ -6,8 +6,12 @@ import { RouteNames } from "../../constants";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSort, FaSortDown, FaSortUp } from "react-icons/fa";
 import RezervacijaService from "../../services/rezervacije/RezervacijaService";
+import useLoading from "../../hooks/useLoading";
 
 export default function KorisnikPregled() {
+    //loader
+    const { showLoading, hideLoading } = useLoading();
+
     //dohvacanje
     const navigate = useNavigate();
     const [korisnici, setKorisnici] = useState([]);
@@ -33,6 +37,10 @@ export default function KorisnikPregled() {
 
     async function obrisi(sifra) {
 
+        showLoading(); // Loader ON
+        // samo za potrebe testa prikaza rada loading
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
         const broj = await brojRezervacijaKorisnika(sifra);
 
         let poruka = 'Jeste li sigurni da želite obrisati događaj?';
@@ -48,11 +56,14 @@ export default function KorisnikPregled() {
         }
 
         if (!confirm(poruka)) {
+            hideLoading(); // Loader OFF
             return;
         }
 
         await KorisnikService.obrisi(sifra);
         ucitajKorisnike();
+
+        hideLoading(); // Loader OFF
     }
 
     //sortiranje korisnika
