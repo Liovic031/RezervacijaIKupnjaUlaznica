@@ -37,10 +37,6 @@ export default function KorisnikPregled() {
 
     async function obrisi(sifra) {
 
-        showLoading(); // Loader ON
-        // samo za potrebe testa prikaza rada loading
-        await new Promise(resolve => setTimeout(resolve, 2000));
-
         const broj = await brojRezervacijaKorisnika(sifra);
 
         let poruka = 'Jeste li sigurni da želite obrisati događaj?';
@@ -56,9 +52,11 @@ export default function KorisnikPregled() {
         }
 
         if (!confirm(poruka)) {
-            hideLoading(); // Loader OFF
             return;
         }
+        showLoading(); // Loader ON
+        // samo za potrebe testa prikaza rada loading
+        await new Promise(resolve => setTimeout(resolve, 2000));
 
         await KorisnikService.obrisi(sifra);
         ucitajKorisnike();
