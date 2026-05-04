@@ -6,6 +6,7 @@ import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import KorisnikService from "../../services/korisnici/KorisnikService";
 import DogadjajService from "../../services/dogadjaji/DogadjajService";
 import KartaService from "../../services/karte/KartaService";
+import { ShemaRezervacija } from "../../schemas/ShemaRezervacija";
 
 export default function RezervacijaPromjena() {
 
@@ -18,6 +19,7 @@ export default function RezervacijaPromjena() {
     const [karte, setKarte] = useState([]);
     const [odabraneKarte, setOdabraneKarte] = useState([]);
     const [otvoreno, setOtvoreno] = useState(false);
+    const [errors, setErrors] = useState({});
 
     async function ucitajSve() {
         const r = await RezervacijaService.getBySifra(params.sifra);
@@ -35,20 +37,15 @@ export default function RezervacijaPromjena() {
     }
 
     async function ucitajKarte(dogadjajSifra, rezSifra) {
-        // 1) Učitaj sve karte za događaj
         const o = await KartaService.getByDogadjaj(dogadjajSifra);
-
-        // 2) Učitaj događaj da znamo novi broj mjesta
         const dog = await DogadjajService.getBySifra(dogadjajSifra);
+
         if (!dog.success) return;
 
         const maxBroj = dog.data.brojMjesta;
 
-        // 3) Filtriraj karte:
         const filtrirane = o.data
-            // samo karte do maxBroj
             .filter(k => k.broj <= maxBroj)
-            // slobodne ili rezervirane od ove rezervacije
             .filter(k =>
                 !k.rezervirano ||
                 k.rezervacijaSifra === rezSifra ||
@@ -58,7 +55,6 @@ export default function RezervacijaPromjena() {
         setKarte(filtrirane);
     }
 
-
     useEffect(() => {
         ucitajSve();
     }, []);
@@ -67,24 +63,46 @@ export default function RezervacijaPromjena() {
 
     async function odradiSubmit(e) {
         e.preventDefault();
+        setErrors({});
+
         const podaci = new FormData(e.target);
+        const objekt = Object.fromEntries(podaci);
 
-        const korisnik = parseInt(podaci.get("korisnik"));
-        const dogadjaj = parseInt(podaci.get("dogadjaj"));
+        objekt.korisnikSifra = objekt.korisnik;
+        objekt.dogadjajSifra = objekt.dogadjaj;
 
-        // oslobodi stare
+        // 1) ZOD VALIDACIJA
+        const rezultat = ShemaRezervacija.safeParse(objekt);
+
+        if (!rezultat.success) {
+            const greske = {};
+            rezultat.error.issues.forEach(issue => {
+                const kljuc = issue.path[0];
+                greske[kljuc] = issue.message;
+            });
+            setErrors(greske);
+            return;
+        }
+
+        // 2) VALIDACIJA KARATA
+        if (odabraneKarte.length === 0) {
+            setErrors(prev => ({ ...prev, karte: "Odaberite barem jednu kartu!" }));
+            return;
+        }
+
+        // 3) Oslobodi stare karte
         await KartaService.oslobodiKarte(params.sifra);
 
-        // spremi
+        // 4) Spremi rezervaciju
         await RezervacijaService.promjeni(params.sifra, {
-            korisnikSifra: korisnik,
-            dogadjajSifra: dogadjaj,
+            korisnikSifra: rezultat.data.korisnikSifra,
+            dogadjajSifra: rezultat.data.dogadjajSifra,
             brojeviKarata: odabraneKarte
         });
 
-        // rezerviraj nove
+        // 5) Rezerviraj nove karte
         await KartaService.rezervirajKarte(
-            dogadjaj,
+            rezultat.data.dogadjajSifra,
             odabraneKarte,
             params.sifra
         );
@@ -104,13 +122,20 @@ export default function RezervacijaPromjena() {
                             <Row>
                                 <Col md={6}>
                                     <Form.Label>Korisnik</Form.Label>
-                                    <Form.Select name="korisnik" defaultValue={rezervacija.korisnikSifra}>
+                                    <Form.Select
+                                        name="korisnik"
+                                        defaultValue={rezervacija.korisnikSifra}
+                                        isInvalid={!!errors.korisnikSifra}
+                                    >
                                         {korisnici.map(k => (
                                             <option key={k.sifra} value={k.sifra}>
                                                 {k.ime} {k.prezime}
                                             </option>
                                         ))}
                                     </Form.Select>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.korisnikSifra}
+                                    </Form.Control.Feedback>
                                 </Col>
 
                                 <Col md={6}>
@@ -118,6 +143,7 @@ export default function RezervacijaPromjena() {
                                     <Form.Select
                                         name="dogadjaj"
                                         defaultValue={rezervacija.dogadjajSifra}
+                                        isInvalid={!!errors.dogadjajSifra}
                                         onChange={(e) => ucitajKarte(e.target.value, params.sifra)}
                                     >
                                         {dogadjaji.map(d => (
@@ -126,18 +152,25 @@ export default function RezervacijaPromjena() {
                                             </option>
                                         ))}
                                     </Form.Select>
+                                    <Form.Control.Feedback type="invalid">
+                                        {errors.dogadjajSifra}
+                                    </Form.Control.Feedback>
                                 </Col>
                             </Row>
 
                             <hr />
-                            <div className="mb-3 position-relative">
 
+                            <div className="mb-3 position-relative">
                                 <Button
                                     variant="secondary"
                                     onClick={() => setOtvoreno(!otvoreno)}
                                 >
                                     Odaberi karte ({odabraneKarte.length})
                                 </Button>
+
+                                {errors.karte && (
+                                    <div className="text-danger mt-1">{errors.karte}</div>
+                                )}
 
                                 {otvoreno && (
                                     <div
@@ -158,24 +191,28 @@ export default function RezervacijaPromjena() {
                                                 label={`Karta ${k.broj}`}
                                                 checked={odabraneKarte.includes(k.broj)}
                                                 disabled={
-                                                    !odabraneKarte.includes(k.broj) && odabraneKarte.length >= 5
+                                                    !odabraneKarte.includes(k.broj) &&
+                                                    odabraneKarte.length >= 5
                                                 }
                                                 onChange={() => {
                                                     if (odabraneKarte.includes(k.broj)) {
-                                                        setOdabraneKarte(odabraneKarte.filter(b => b !== k.broj));
+                                                        setOdabraneKarte(
+                                                            odabraneKarte.filter(b => b !== k.broj)
+                                                        );
                                                     } else {
                                                         if (odabraneKarte.length >= 5) {
-                                                            alert("Max 5 karata!");
                                                             return;
                                                         }
-                                                        setOdabraneKarte([...odabraneKarte, k.broj]);
+                                                        setOdabraneKarte([
+                                                            ...odabraneKarte,
+                                                            k.broj
+                                                        ]);
                                                     }
                                                 }}
                                             />
                                         ))}
                                     </div>
                                 )}
-
                             </div>
 
                             <hr />

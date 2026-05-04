@@ -3,6 +3,7 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KorisnikService from "../../services/korisnici/KorisnikService";
 import { useEffect, useState } from "react";
+import { ShemaKorisnik } from "../../schemas/ShemaKorisnik";
 
 export default function KorisnikPromjena() {
 
@@ -10,17 +11,17 @@ export default function KorisnikPromjena() {
     const params = useParams();
 
     const [korisnik, setKorisnik] = useState({});
+    const [errors, setErrors] = useState({});
 
     async function ucitajKorisnik() {
-        await KorisnikService.getBySifra(params.sifra).then((odgovor) => {
+        const odgovor = await KorisnikService.getBySifra(params.sifra);
 
-            if (!odgovor.success) {
-                alert("Nije implementiran servis");
-                return;
-            }
+        if (!odgovor.success) {
+            alert("Nije implementiran servis");
+            return;
+        }
 
-            setKorisnik(odgovor.data);
-        });
+        setKorisnik(odgovor.data);
     }
 
     useEffect(() => {
@@ -35,81 +36,94 @@ export default function KorisnikPromjena() {
 
     function odradiSubmit(e) {
         e.preventDefault();
+        setErrors({});
+
         const podaci = new FormData(e.target);
+        const objekt = Object.fromEntries(podaci);
 
-        // --- Kontrole ---
-        if (!podaci.get("ime")?.trim()) {
-            alert("Ime je obavezno!");
-            return;
-        }
-        if (podaci.get("ime").trim().length < 2) {
-            alert("Ime mora imati najmanje 2 znaka!");
-            return;
-        }
-        if (!podaci.get("prezime")?.trim()) {
-            alert("Prezime je obavezno!");
-            return;
-        }
-        if (podaci.get("prezime").trim().length < 2) {
-            alert("Prezime mora imati najmanje 2 znaka!");
-            return;
-        }
-        if (!podaci.get("email")?.trim()) {
-            alert("Email je obavezan!");
-            return;
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(podaci.get("email"))) {
-            alert("Email nije u ispravnom formatu!");
+        // ZOD VALIDACIJA
+        const rezultat = ShemaKorisnik.safeParse(objekt);
+
+        if (!rezultat.success) {
+            const greske = {};
+
+            rezultat.error.issues.forEach(issue => {
+                const kljuc = issue.path[0];
+                if (!greske[kljuc]) {
+                    greske[kljuc] = issue.message;
+                }
+            });
+
+            setErrors(greske);
             return;
         }
 
-        promjeni({
-            ime: podaci.get("ime"),
-            prezime: podaci.get("prezime"),
-            email: podaci.get("email"),
-        });
+        promjeni(rezultat.data);
     }
 
+    const ocistiGresku = (polje) => {
+        if (errors[polje]) {
+            const nove = { ...errors };
+            delete nove[polje];
+            setErrors(nove);
+        }
+    };
+
     return (
-       <>
+        <>
             <h3 className="mb-4">Promjena korisnika</h3>
 
-            <Form onSubmit={odradiSubmit}>
+            <Form noValidate onSubmit={odradiSubmit}>
                 <Container>
                     <Card className="p-3">
                         <Card.Body>
                             <Row>
                                 <Col md={6}>
+                                    {/* Ime */}
                                     <Form.Group className="mb-3" controlId="ime">
                                         <Form.Label>Ime</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="ime"
-                                            required
                                             defaultValue={korisnik.ime}
+                                            isInvalid={!!errors.ime}
+                                            onFocus={() => ocistiGresku("ime")}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.ime}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
+                                    {/* Prezime */}
                                     <Form.Group className="mb-3" controlId="prezime">
                                         <Form.Label>Prezime</Form.Label>
                                         <Form.Control
                                             type="text"
                                             name="prezime"
-                                            required
                                             defaultValue={korisnik.prezime}
+                                            isInvalid={!!errors.prezime}
+                                            onFocus={() => ocistiGresku("prezime")}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.prezime}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
 
                                 <Col md={6}>
+                                    {/* Email */}
                                     <Form.Group className="mb-3" controlId="email">
                                         <Form.Label>Email</Form.Label>
                                         <Form.Control
                                             type="email"
                                             name="email"
                                             defaultValue={korisnik.email}
+                                            isInvalid={!!errors.email}
+                                            onFocus={() => ocistiGresku("email")}
                                         />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.email}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -123,7 +137,7 @@ export default function KorisnikPromjena() {
 
                                 <Link to={RouteNames.KORISNICI} className="btn btn-danger px-4">
                                     Odustani
-                                </Link>  
+                                </Link>
                             </div>
                         </Card.Body>
                     </Card>

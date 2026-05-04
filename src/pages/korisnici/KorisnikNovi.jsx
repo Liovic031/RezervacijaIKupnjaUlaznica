@@ -2,10 +2,13 @@ import { Button, Col, Form, Row, Card, Container } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { RouteNames } from "../../constants";
 import KorisnikService from "../../services/korisnici/KorisnikService";
+import { useState } from "react";
+import { ShemaKorisnik } from "../../schemas/ShemaKorisnik";
 
 export default function KorisnikNovi() {
 
     const navigate = useNavigate();
+    const [errors, setErrors] = useState({});
 
     async function dodaj(korisnik) {
         await KorisnikService.dodaj(korisnik).then(() => {
@@ -15,69 +18,95 @@ export default function KorisnikNovi() {
 
     function odradiSubmit(e) {
         e.preventDefault();
+        setErrors({});
+
         const podaci = new FormData(e.target);
+        const objekt = Object.fromEntries(podaci);
 
-        // --- Kontrole ---
-        if (!podaci.get("ime")?.trim()) {
-            alert("Ime je obavezno!");
-            return;
-        }
-        if (podaci.get("ime").trim().length < 2) {
-            alert("Ime mora imati najmanje 2 znaka!");
-            return;
-        }
+        // ZOD VALIDACIJA
+        const rezultat = ShemaKorisnik.safeParse(objekt);
 
-        if (!podaci.get("prezime")?.trim()) {
-            alert("Prezime je obavezno!");
-            return;
-        }
-        if (podaci.get("prezime").trim().length < 2) {
-            alert("Prezime mora imati najmanje 2 znaka!");
-            return;
-        }
-        if (!podaci.get("email")?.trim()) {
-            alert("Email je obavezan!");
-            return;
-        }
-        const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-        if (!emailRegex.test(podaci.get("email"))) {
-            alert("Email nije u ispravnom formatu!");
+        if (!rezultat.success) {
+            const greske = {};
+
+            rezultat.error.issues.forEach(issue => {
+                const kljuc = issue.path[0];
+                if (!greske[kljuc]) {
+                    greske[kljuc] = issue.message;
+                }
+            });
+
+            setErrors(greske);
             return;
         }
 
+        // Ako je sve OK
         dodaj({
-            ime: podaci.get("ime"),
-            prezime: podaci.get("prezime"),
-            email: podaci.get("email"),
+            ...rezultat.data,
             datumKreiranja: new Date().toISOString()
         });
     }
+
+    const ocistiGresku = (polje) => {
+        if (errors[polje]) {
+            const nove = { ...errors };
+            delete nove[polje];
+            setErrors(nove);
+        }
+    };
 
     return (
         <>
             <h3 className="mb-4">Unos novog korisnika</h3>
 
-            <Form onSubmit={odradiSubmit}>
+            <Form noValidate onSubmit={odradiSubmit}>
                 <Container>
                     <Card className="p-3">
                         <Card.Body>
                             <Row>
                                 <Col md={6}>
+                                    {/* Ime */}
                                     <Form.Group className="mb-3" controlId="ime">
                                         <Form.Label>Ime</Form.Label>
-                                        <Form.Control type="text" name="ime" required />
+                                        <Form.Control
+                                            type="text"
+                                            name="ime"
+                                            isInvalid={!!errors.ime}
+                                            onFocus={() => ocistiGresku("ime")}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.ime}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
 
+                                    {/* Prezime */}
                                     <Form.Group className="mb-3" controlId="prezime">
                                         <Form.Label>Prezime</Form.Label>
-                                        <Form.Control type="text" name="prezime" required />
+                                        <Form.Control
+                                            type="text"
+                                            name="prezime"
+                                            isInvalid={!!errors.prezime}
+                                            onFocus={() => ocistiGresku("prezime")}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.prezime}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
 
                                 <Col md={6}>
+                                    {/* Email */}
                                     <Form.Group className="mb-3" controlId="email">
                                         <Form.Label>Email</Form.Label>
-                                        <Form.Control type="email" name="email" required />
+                                        <Form.Control
+                                            type="email"
+                                            name="email"
+                                            isInvalid={!!errors.email}
+                                            onFocus={() => ocistiGresku("email")}
+                                        />
+                                        <Form.Control.Feedback type="invalid">
+                                            {errors.email}
+                                        </Form.Control.Feedback>
                                     </Form.Group>
                                 </Col>
                             </Row>
@@ -90,7 +119,7 @@ export default function KorisnikNovi() {
                                 </Button>
                                 <Link to={RouteNames.KORISNICI} className="btn btn-danger px-4">
                                     Odustani
-                                </Link>   
+                                </Link>
                             </div>
                         </Card.Body>
                     </Card>
