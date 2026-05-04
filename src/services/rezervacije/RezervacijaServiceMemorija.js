@@ -1,45 +1,57 @@
 import { rezervacije } from "./RezervacijaPodaci";
 import KartaService from "../karte/KartaService";
 
-// 1/4 Read
+// READ
 async function get() {
     return { success: true, data: [...rezervacije] };
 }
 
 async function getBySifra(sifra) {
-    return { 
-        success: true, 
-        data: rezervacije.find(r => r.sifra === parseInt(sifra)) 
+    return {
+        success: true,
+        data: rezervacije.find(r => r.sifra === parseInt(sifra))
     };
 }
 
-// 2/4 Create
+// CREATE
 async function dodaj(rezervacija) {
-    rezervacija.sifra = rezervacije.length > 0 
-        ? rezervacije[rezervacije.length - 1].sifra + 1 
-        : 1;
+    rezervacija.sifra =
+        rezervacije.length > 0
+            ? rezervacije[rezervacije.length - 1].sifra + 1
+            : 1;
 
     rezervacija.evidentirano = false;
     rezervacija.datumEvidentiranja = null;
-    
+
     rezervacije.push(rezervacija);
 
-    return { data: rezervacija };
+    return { success: true, data: rezervacija };
 }
 
-// 3/4 Update
+// UPDATE
 async function promjeni(sifra, rezervacija) {
-    const index = nadiIndex(sifra);
+    const index = rezervacije.findIndex(r => r.sifra === parseInt(sifra));
+
+    if (index === -1) {
+        return { success: false, message: "Rezervacija ne postoji." };
+    }
+
     rezervacije[index] = { ...rezervacije[index], ...rezervacija };
+
+    return { success: true, data: rezervacije[index] };
 }
 
-function nadiIndex(sifra) {
-    return rezervacije.findIndex(r => r.sifra === parseInt(sifra));
-}
-
-// 4/4 Delete
+// DELETE
 async function obrisi(sifra) {
-    const index = nadiIndex(sifra);
-    rezervacije.splice(index, 1);
+
+    // 1) Oslobodi karte
+    await KartaService.oslobodiKarte(sifra);
+
+    // 2) Obriši rezervaciju
+    const index = rezervacije.findIndex(r => r.sifra === parseInt(sifra));
+    if (index !== -1) rezervacije.splice(index, 1);
+
+    return { success: true, message: "Obrisano" };
 }
+
 export default { get, getBySifra, dodaj, promjeni, obrisi };

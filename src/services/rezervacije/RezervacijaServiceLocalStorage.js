@@ -11,57 +11,65 @@ function spremiUStorage(podaci) {
 }
 
 async function get() {
-    const rezervacije = dohvatiSveIzStorage();
-    return { success: true, data: [...rezervacije] };
+    return { success: true, data: dohvatiSveIzStorage() };
 }
 
 async function getBySifra(sifra) {
     const rezervacije = dohvatiSveIzStorage();
-    const rezervacija = rezervacije.find(r => r.sifra === parseInt(sifra));
-    return { success: true, data: rezervacija };
+    return {
+        success: true,
+        data: rezervacije.find(r => r.sifra === parseInt(sifra))
+    };
 }
 
 async function dodaj(rezervacija) {
     const rezervacije = dohvatiSveIzStorage();
 
     rezervacija.sifra =
-        rezervacije.length === 0
-            ? 1
-            : Math.max(...rezervacije.map(r => r.sifra)) + 1;
+        rezervacije.length > 0
+            ? Math.max(...rezervacije.map(r => r.sifra)) + 1
+            : 1;
 
     rezervacija.evidentirano = false;
     rezervacija.datumEvidentiranja = null;
-    
+
     rezervacije.push(rezervacija);
     spremiUStorage(rezervacije);
 
-    return { data: rezervacija };
+    return { success: true, data: rezervacija };
 }
 
 async function promjeni(sifra, rezervacija) {
     const rezervacije = dohvatiSveIzStorage();
     const index = rezervacije.findIndex(r => r.sifra === parseInt(sifra));
 
-    if (index !== -1) {
-        rezervacije[index] = { ...rezervacije[index], ...rezervacija };
-        spremiUStorage(rezervacije);
+    if (index === -1) {
+        return { success: false, message: "Rezervacija ne postoji." };
     }
 
-    return { data: rezervacije[index] };
+    rezervacije[index] = { ...rezervacije[index], ...rezervacija };
+    spremiUStorage(rezervacije);
+
+    return { success: true, data: rezervacije[index] };
 }
 
 async function obrisi(sifra) {
+
+    // 1) Oslobodi karte
+    await KartaService.oslobodiKarte(sifra);
+
+    // 2) Obriši rezervaciju
     let rezervacije = dohvatiSveIzStorage();
     rezervacije = rezervacije.filter(r => r.sifra !== parseInt(sifra));
     spremiUStorage(rezervacije);
 
-    return { message: "Obrisano" };
+    return { success: true, message: "Obrisano" };
 }
 
 export default {
     get,
-    dodaj,
     getBySifra,
+    dodaj,
     promjeni,
     obrisi
 };

@@ -1,77 +1,68 @@
-const STORAGE_KEY = 'korisnici';
-
+import { PrefixStorage } from "../../constants";
 import RezervacijaService from "../rezervacije/RezervacijaService";
 
 function dohvatiSveIzStorage() {
-    const podaci = localStorage.getItem(STORAGE_KEY);
+    const podaci = localStorage.getItem(PrefixStorage.KORISNICI);
     return podaci ? JSON.parse(podaci) : [];
 }
 
 function spremiUStorage(podaci) {
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(podaci));
+    localStorage.setItem(PrefixStorage.KORISNICI, JSON.stringify(podaci));
 }
 
 async function get() {
-    const korisnici = dohvatiSveIzStorage();
-    return { success: true, data: [...korisnici] };
+    return { success: true, data: dohvatiSveIzStorage() };
 }
 
 async function getBySifra(sifra) {
     const korisnici = dohvatiSveIzStorage();
-    const korisnik = korisnici.find(s => s.sifra === parseInt(sifra));
-    return { success: true, data: korisnik };
+    return {
+        success: true,
+        data: korisnici.find(k => k.sifra === parseInt(sifra))
+    };
 }
 
 async function dodaj(korisnik) {
     const korisnici = dohvatiSveIzStorage();
 
     korisnik.sifra =
-        korisnici.length === 0
-            ? 1
-            : Math.max(...korisnici.map(s => s.sifra)) + 1;
+        korisnici.length > 0
+            ? Math.max(...korisnici.map(k => k.sifra)) + 1
+            : 1;
 
     korisnici.push(korisnik);
     spremiUStorage(korisnici);
 
-    return { data: korisnik };
+    return { success: true, data: korisnik };
 }
 
 async function promjeni(sifra, korisnik) {
     const korisnici = dohvatiSveIzStorage();
-    const index = korisnici.findIndex(s => s.sifra === parseInt(sifra));
+    const index = korisnici.findIndex(k => k.sifra === parseInt(sifra));
 
-    if (index !== -1) {
-        korisnici[index] = { ...korisnici[index], ...korisnik };
-        spremiUStorage(korisnici);
+    if (index === -1) {
+        return { success: false, message: "Korisnik ne postoji." };
     }
 
-    return { data: korisnici[index] };
+    korisnici[index] = { ...korisnici[index], ...korisnik };
+    spremiUStorage(korisnici);
+
+    return { success: true, data: korisnici[index] };
 }
 
 async function obrisi(sifra) {
-
-    // 1. DOHVATI SVE REZERVACIJE
     const rez = await RezervacijaService.get();
-
-    // 2. OBRIŠI ONE KOJE PRIPADAJU KORISNIKU
     for (let r of rez.data) {
         if (r.korisnikSifra === parseInt(sifra)) {
             await RezervacijaService.obrisi(r.sifra);
         }
     }
 
-    // 3. OBRIŠI KORISNIKA
     let korisnici = dohvatiSveIzStorage();
-    korisnici = korisnici.filter(s => s.sifra !== parseInt(sifra));
+    korisnici = korisnici.filter(k => k.sifra !== parseInt(sifra));
     spremiUStorage(korisnici);
 
-    return { message: 'Obrisano' };
+    return { success: true, message: "Obrisano" };
 }
 
-export default {
-    get,
-    dodaj,
-    getBySifra,
-    promjeni,
-    obrisi
-};
+export default { get, getBySifra, dodaj, promjeni, obrisi };

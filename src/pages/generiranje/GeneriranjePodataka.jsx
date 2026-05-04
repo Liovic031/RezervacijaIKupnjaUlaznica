@@ -7,6 +7,15 @@ import KorisnikService from "../../services/korisnici/KorisnikService";
 import RezervacijaService from "../../services/rezervacije/RezervacijaService";
 import KartaService from "../../services/karte/KartaService";
 
+import { PrefixStorage } from "../../constants";
+
+// memorijski podaci
+import { dogadjaji as dogadjajiMem } from "../../services/dogadjaji/DogadjajPodaci";
+import { korisnici as korisniciMem } from "../../services/korisnici/KorisnikPodaci";
+import { karte as karteMem } from "../../services/karte/KartaPodaci";
+import { rezervacije as rezervacijeMem } from "../../services/rezervacije/RezervacijaPodaci";
+
+
 export default function GeneriranjePodataka() {
 
     const faker = new Faker({ locale: [hr, en] });
@@ -19,30 +28,13 @@ export default function GeneriranjePodataka() {
     const [loading, setLoading] = useState(false);
 
     const naziviDogadjaja = [
-        'Tech konferencija',
-        'AI Summit',
-        'Frontend Meetup',
-        'Backend Meetup',
-        'JavaScript Day',
-        'Python Workshop',
-        'Cyber Security Forum',
-        'Startup Pitch Night',
-        'Gaming Expo',
-        'Retro Gaming Night',
-        'Stand-up večer',
-        'Jazz Night',
-        'Rock koncert',
-        'EDM Festival',
-        'Film Premiere',
-        'Kazališna predstava',
-        'Salsa Night',
-        'Wine Tasting',
-        'Food Festival',
-        'Book Fair',
-        'Photography Expo',
-        'Design Conference',
-        'Marketing Summit',
-        'Business Networking Event'
+        'Tech konferencija', 'AI Summit', 'Frontend Meetup', 'Backend Meetup',
+        'JavaScript Day', 'Python Workshop', 'Cyber Security Forum',
+        'Startup Pitch Night', 'Gaming Expo', 'Retro Gaming Night',
+        'Stand-up večer', 'Jazz Night', 'Rock koncert', 'EDM Festival',
+        'Film Premiere', 'Kazališna predstava', 'Salsa Night', 'Wine Tasting',
+        'Food Festival', 'Book Fair', 'Photography Expo', 'Design Conference',
+        'Marketing Summit', 'Business Networking Event'
     ];
 
     // -------------------------------------------------------
@@ -70,7 +62,6 @@ export default function GeneriranjePodataka() {
             await KartaService.generirajZaDogadjaj(rezultat.data);
         }
     };
-
 
     const handleGenerirajDogadjaje = async (e) => {
         e.preventDefault();
@@ -131,7 +122,6 @@ export default function GeneriranjePodataka() {
             const dogadjaj = faker.helpers.arrayElement(dogadjaji);
             const korisnik = faker.helpers.arrayElement(korisnici);
 
-            // generiraj karte ako nisu generirane
             await KartaService.generirajZaDogadjaj(dogadjaj);
 
             const sveKarte = (await KartaService.getByDogadjaj(dogadjaj.sifra)).data;
@@ -177,13 +167,53 @@ export default function GeneriranjePodataka() {
     };
 
     // -------------------------------------------------------
+    // PRETAKANJE MEMORIJE → LOCALSTORAGE
+    // -------------------------------------------------------
+    const handleMemorijaULocalStorage = async () => {
+        if (!window.confirm("Jeste li sigurni da želite pretočiti podatke iz memorije u localStorage?")) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            // 1) DOGAĐAJI
+            localStorage.setItem(PrefixStorage.DOGADJAJI, JSON.stringify(dogadjajiMem));
+
+            // 2) KORISNICI
+            localStorage.setItem(PrefixStorage.KORISNICI, JSON.stringify(korisniciMem));
+
+            // 3) KARTE
+            localStorage.setItem(PrefixStorage.KARTE, JSON.stringify(karteMem));
+
+            // 4) REZERVACIJE
+            localStorage.setItem(PrefixStorage.REZERVACIJE, JSON.stringify(rezervacijeMem));
+
+            setPoruka({
+                tip: "success",
+                tekst: "Uspješno presipano iz memorije u localStorage!"
+            });
+
+        } catch (err) {
+            setPoruka({
+                tip: "danger",
+                tekst: "Greška pri presipavanju: " + err.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
+
+
+    // -------------------------------------------------------
     // BRISANJE SVIH PODATAKA
     // -------------------------------------------------------
     const obrisiSve = () => {
-        localStorage.removeItem("dogadjaji");
-        localStorage.removeItem("korisnici");
-        localStorage.removeItem("karte");
-        localStorage.removeItem("rezervacije");
+        localStorage.removeItem(PrefixStorage.DOGADJAJI);
+        localStorage.removeItem(PrefixStorage.KORISNICI);
+        localStorage.removeItem(PrefixStorage.KARTE);
+        localStorage.removeItem(PrefixStorage.REZERVACIJE);
 
         setPoruka({ tip: "warning", tekst: "Svi podaci obrisani!" });
     };
@@ -260,7 +290,30 @@ export default function GeneriranjePodataka() {
                 </Col>
             </Row>
 
-            <Button variant="danger" className="w-100" onClick={obrisiSve}>
+            <Row className="mt-4">
+                <Col md={6}>
+                    <Button
+                        variant="success"
+                        className="w-100 mb-2"
+                        disabled={loading}
+                        onClick={handleMemorijaULocalStorage}
+                    >
+                        {loading ? "Pretakanje..." : "Iz memorije u localStorage"}
+                    </Button>
+                </Col>
+
+                <Col md={6}>
+                    <Button
+                        variant="secondary"
+                        className="w-100 mb-2"
+                        disabled={true}
+                    >
+                        Iz memorije u Firebase (uskoro)
+                    </Button>
+                </Col>
+            </Row>
+
+            <Button variant="danger" className="w-100 mt-3" onClick={obrisiSve}>
                 Obriši sve podatke
             </Button>
         </Container>

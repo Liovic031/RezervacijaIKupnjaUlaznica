@@ -1,16 +1,94 @@
 export const karte = [
-    {
-        sifra: 1,
-        dogadjajSifra: 1,
-        broj: 1,
-        rezervirano: false,
-        rezervacijaSifra: null
-    },
-    {
-        sifra: 2,
-        dogadjajSifra: 1,
-        broj: 2,
-        rezervirano: false,
-        rezervacijaSifra: null
-    }
+    // --- DOGAĐAJ 1 (12 mjesta) ---
+    { sifra: 1, dogadjajSifra: 1, broj: 1, rezervirano: true, rezervacijaSifra: 2 },
+    { sifra: 2, dogadjajSifra: 1, broj: 2, rezervirano: true, rezervacijaSifra: 2 },
+    { sifra: 3, dogadjajSifra: 1, broj: 3, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 4, dogadjajSifra: 1, broj: 4, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 5, dogadjajSifra: 1, broj: 5, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 6, dogadjajSifra: 1, broj: 6, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 7, dogadjajSifra: 1, broj: 7, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 8, dogadjajSifra: 1, broj: 8, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 9, dogadjajSifra: 1, broj: 9, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 10, dogadjajSifra: 1, broj: 10, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 11, dogadjajSifra: 1, broj: 11, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 12, dogadjajSifra: 1, broj: 12, rezervirano: false, rezervacijaSifra: null },
+
+    // --- DOGAĐAJ 2 (15 mjesta) ---
+    { sifra: 13, dogadjajSifra: 2, broj: 1, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 14, dogadjajSifra: 2, broj: 2, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 15, dogadjajSifra: 2, broj: 3, rezervirano: true, rezervacijaSifra: 1 },
+    { sifra: 16, dogadjajSifra: 2, broj: 4, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 17, dogadjajSifra: 2, broj: 5, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 18, dogadjajSifra: 2, broj: 6, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 19, dogadjajSifra: 2, broj: 7, rezervirano: true, rezervacijaSifra: 1 },
+    { sifra: 20, dogadjajSifra: 2, broj: 8, rezervirano: true, rezervacijaSifra: 1 },
+    { sifra: 21, dogadjajSifra: 2, broj: 9, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 22, dogadjajSifra: 2, broj: 10, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 23, dogadjajSifra: 2, broj: 11, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 24, dogadjajSifra: 2, broj: 12, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 25, dogadjajSifra: 2, broj: 13, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 26, dogadjajSifra: 2, broj: 14, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 27, dogadjajSifra: 2, broj: 15, rezervirano: false, rezervacijaSifra: null },
+
+
+    // --- DOGAĐAJ 3 (18 mjesta) ---
+    { sifra: 28, dogadjajSifra: 3, broj: 1, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 29, dogadjajSifra: 3, broj: 2, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 30, dogadjajSifra: 3, broj: 3, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 31, dogadjajSifra: 3, broj: 4, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 32, dogadjajSifra: 3, broj: 5, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 33, dogadjajSifra: 3, broj: 6, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 34, dogadjajSifra: 3, broj: 7, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 35, dogadjajSifra: 3, broj: 8, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 36, dogadjajSifra: 3, broj: 9, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 37, dogadjajSifra: 3, broj: 10, rezervirano: true, rezervacijaSifra: 4 },
+    { sifra: 38, dogadjajSifra: 3, broj: 11, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 39, dogadjajSifra: 3, broj: 12, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 40, dogadjajSifra: 3, broj: 13, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 41, dogadjajSifra: 3, broj: 14, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 42, dogadjajSifra: 3, broj: 15, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 43, dogadjajSifra: 3, broj: 16, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 44, dogadjajSifra: 3, broj: 17, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 45, dogadjajSifra: 3, broj: 18, rezervirano: false, rezervacijaSifra: null },
+
+
+    // --- DOGAĐAJ 4 (20 mjesta) ---
+    { sifra: 46, dogadjajSifra: 4, broj: 1, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 47, dogadjajSifra: 4, broj: 2, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 48, dogadjajSifra: 4, broj: 3, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 49, dogadjajSifra: 4, broj: 4, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 50, dogadjajSifra: 4, broj: 5, rezervirano: true, rezervacijaSifra: 3 },
+    { sifra: 51, dogadjajSifra: 4, broj: 6, rezervirano: true, rezervacijaSifra: 3 },
+    { sifra: 52, dogadjajSifra: 4, broj: 7, rezervirano: true, rezervacijaSifra: 3 },
+    { sifra: 53, dogadjajSifra: 4, broj: 8, rezervirano: true, rezervacijaSifra: 3 },
+    { sifra: 54, dogadjajSifra: 4, broj: 9, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 55, dogadjajSifra: 4, broj: 10, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 56, dogadjajSifra: 4, broj: 11, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 57, dogadjajSifra: 4, broj: 12, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 58, dogadjajSifra: 4, broj: 13, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 59, dogadjajSifra: 4, broj: 14, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 60, dogadjajSifra: 4, broj: 15, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 61, dogadjajSifra: 4, broj: 16, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 62, dogadjajSifra: 4, broj: 17, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 63, dogadjajSifra: 4, broj: 18, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 64, dogadjajSifra: 4, broj: 19, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 65, dogadjajSifra: 4, broj: 20, rezervirano: false, rezervacijaSifra: null },
+
+
+    // --- DOGAĐAJ 5 (14 mjesta) ---
+    { sifra: 66, dogadjajSifra: 5, broj: 1, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 67, dogadjajSifra: 5, broj: 2, rezervirano: true, rezervacijaSifra: 5 },
+    { sifra: 68, dogadjajSifra: 5, broj: 3, rezervirano: true, rezervacijaSifra: 5 },
+    { sifra: 69, dogadjajSifra: 5, broj: 4, rezervirano: true, rezervacijaSifra: 6 },
+    { sifra: 70, dogadjajSifra: 5, broj: 5, rezervirano: true, rezervacijaSifra: 6 },
+    { sifra: 71, dogadjajSifra: 5, broj: 6, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 72, dogadjajSifra: 5, broj: 7, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 73, dogadjajSifra: 5, broj: 8, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 74, dogadjajSifra: 5, broj: 9, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 75, dogadjajSifra: 5, broj: 10, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 76, dogadjajSifra: 5, broj: 11, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 77, dogadjajSifra: 5, broj: 12, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 78, dogadjajSifra: 5, broj: 13, rezervirano: false, rezervacijaSifra: null },
+    { sifra: 79, dogadjajSifra: 5, broj: 14, rezervirano: false, rezervacijaSifra: null }
 ];
+

@@ -7,9 +7,7 @@ async function get() {
 async function getByDogadjaj(sifra) {
     return {
         success: true,
-        data: karte.filter(
-            k => k.dogadjajSifra === parseInt(sifra)
-        )
+        data: karte.filter(k => k.dogadjajSifra === parseInt(sifra))
     };
 }
 
@@ -17,15 +15,19 @@ async function generirajZaDogadjaj(dogadjaj) {
     const postojece = karte.filter(k => k.dogadjajSifra === dogadjaj.sifra);
     if (postojece.length > 0) return;
 
+    const maxSifra = karte.length > 0 ? Math.max(...karte.map(k => k.sifra)) : 0;
+
     for (let i = 1; i <= dogadjaj.brojMjesta; i++) {
         karte.push({
-            sifra: Date.now() + i,
+            sifra: maxSifra + i,
             dogadjajSifra: dogadjaj.sifra,
             broj: i,
             rezervirano: false,
             rezervacijaSifra: null
         });
     }
+
+    return { success: true };
 }
 
 async function rezervirajKarte(dogadjajSifra, brojevi, rezervacijaSifra) {

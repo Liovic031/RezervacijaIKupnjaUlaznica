@@ -1,4 +1,4 @@
-export const IME_APLIKACIJE = 'Event Booking APP'
+export const IME_APLIKACIJE = 'Event Booking APP';
 
 export const RouteNames = {
     HOME: '/',
@@ -17,8 +17,15 @@ export const RouteNames = {
     REZERVACIJE_EVIDENTIRAJ: '/rezervacije/evidentiraj/:sifra',
 
     GENERIRANJE_PODATAKA: '/generiranje'
-    // ovo je ruta
-}
+};
 
 // memorija, localstorage, firebase
 export const DATA_SOURCE = 'localstorage';
+
+// PrefixStorage – tvoja verzija profesorovog
+export const PrefixStorage = {
+    DOGADJAJI: 'dogadjaji',
+    KORISNICI: 'korisnici',
+    KARTE: 'karte',
+    REZERVACIJE: 'rezervacije'
+};
