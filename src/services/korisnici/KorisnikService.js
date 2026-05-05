@@ -4,7 +4,7 @@ import KorisnikServiceMemorija from "./KorisnikServiceMemorija";
 
 let Servis = null;
 
-switch(DATA_SOURCE) {
+switch (DATA_SOURCE) {
     case 'memorija':
         Servis = KorisnikServiceMemorija;
         break;
@@ -17,10 +17,13 @@ switch(DATA_SOURCE) {
 
 const PrazanServis = {
     get: async () => ({ success: false, data: [] }),
-    getBySifra: async (sifra) => ({ success: false, data: {} }),
-    dodaj: async (korisnik) => { console.error("Servis nije učitan"); },
-    promjeni: async (sifra, korisnik) => { console.error("Servis nije učitan"); },
-    obrisi: async (sifra) => { console.error("Servis nije učitan"); }
+    getBySifra: async (sifra) => ({ success: false, data: null }),
+    getByEmail: async (email) => ({ success: false, data: null }),
+    dodaj: async (korisnik) => ({ success: false, message: "Servis nije učitan" }),
+    promjeni: async (sifra, korisnik) => ({ success: false, message: "Servis nije učitan" }),
+    obrisi: async (sifra) => ({ success: false, message: "Servis nije učitan" }),
+    oslobodiKarte: async (rezSifra) => ({ success: false }),
+    obrisiZaDogadjaj: async (sifra) => ({ success: false })
 };
 
 // Jedan jedini export
@@ -29,6 +32,7 @@ const AktivniServis = Servis || PrazanServis;
 export default {
     get: () => AktivniServis.get(),
     getBySifra: (sifra) => AktivniServis.getBySifra(sifra),
+    getByEmail: (email) => AktivniServis.getByEmail(email),
     dodaj: (korisnik) => AktivniServis.dodaj(korisnik),
     promjeni: (sifra, korisnik) => AktivniServis.promjeni(sifra, korisnik),
     obrisi: (sifra) => AktivniServis.obrisi(sifra),

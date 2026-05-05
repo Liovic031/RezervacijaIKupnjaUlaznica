@@ -12,6 +12,7 @@
   "dependencies": {
     "@faker-js/faker": "^10.4.0",
     "@lottiefiles/dotlottie-react": "^0.18.8",
+    "bcryptjs": "^3.0.3",
     "bootstrap": "^5.3.8",
     "bootstrap-icons": "^1.13.1",
     "jspdf": "^4.2.1",

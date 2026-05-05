@@ -1,7 +1,12 @@
+// src/constants.js
 export const IME_APLIKACIJE = 'Event Booking APP';
 
 export const RouteNames = {
     HOME: '/',
+    LOGIN: '/login',
+    REGISTRACIJA: '/registracija',
+    NADZORNA_PLOCA: '/nadzorna',
+
     DOGADJAJI: '/dogadjaji',
     DOGADJAJI_NOVI: '/dogadjaji/novi',
     DOGADJAJI_PROMJENA: '/dogadjaji/:sifra',
@@ -20,12 +25,13 @@ export const RouteNames = {
 };
 
 // memorija, localstorage, firebase
-export const DATA_SOURCE = 'localstorage';
+export const DATA_SOURCE = 'memorija';
 
 // PrefixStorage – tvoja verzija profesorovog
 export const PrefixStorage = {
     DOGADJAJI: 'dogadjaji',
     KORISNICI: 'korisnici',
     KARTE: 'karte',
-    REZERVACIJE: 'rezervacije'
+    REZERVACIJE: 'rezervacije',
+    AUTH_USER: 'auth_user' // dodano: ključ za pohranu prijavljenog korisnika
 };

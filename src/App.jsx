@@ -1,11 +1,11 @@
-import { Route, Routes } from 'react-router-dom'
-import Home from './pages/Home'
-import { RouteNames } from './constants'
-import DogadjajPregled from './pages/dogadjaji/DogadjajPregled'
+import 'bootstrap/dist/css/bootstrap.min.css'
+import './App.css'
 import { Container } from 'react-bootstrap'
 import Izbornik from './components/Izbornik'
-import 'bootstrap/dist/css/bootstrap.min.css';
-import './App.css'
+import { Route, Routes, Navigate } from 'react-router-dom'
+import { IME_APLIKACIJE, RouteNames } from './constants'
+import Home from './pages/Home'
+import DogadjajPregled from './pages/dogadjaji/DogadjajPregled'
 import DogadjajNovi from './pages/dogadjaji/DogadjajNovi'
 import DogadjajPromjena from './pages/dogadjaji/DogadjajPromjena'
 import KorisnikPregled from './pages/korisnici/KorisnikPregled'
@@ -17,10 +17,13 @@ import RezervacijaNova from './pages/rezervacije/RezervacijaNova'
 import RezervacijaEvidentiraj from './pages/rezervacije/RezervacijaEvidentiraj'
 import GeneriranjePodataka from './pages/generiranje/GeneriranjePodataka'
 import LoadingSpinner from './components/LoadingSpinner'
-
+import Login from './pages/Login'
+import Registracija from './pages/Registracija'
+import NadzornaPloca from './pages/NadzornaPloca'
+import useAuth from './hooks/useAuth'
 
 function App() {
-
+  const { isLoggedIn, authUser } = useAuth()
 
   return (
     <>
@@ -28,19 +31,49 @@ function App() {
       <Container style={{ backgroundColor: window.location.hostname === 'localhost' ? '#ffefea' : 'none' }}>
         <Izbornik />
         <Routes>
+          {/* javne rute */}
           <Route path={RouteNames.HOME} element={<Home />} />
-          <Route path={RouteNames.DOGADJAJI} element={<DogadjajPregled />} />
-          <Route path={RouteNames.DOGADJAJI_NOVI} element={<DogadjajNovi />} />
-          <Route path={RouteNames.DOGADJAJI_PROMJENA} element={<DogadjajPromjena />} />
-          <Route path={RouteNames.KORISNICI} element={<KorisnikPregled />} />
-          <Route path={RouteNames.KORISNICI_NOVI} element={<KorisnikNovi />} />
-          <Route path={RouteNames.KORISNICI_PROMJENA} element={<KorisnikPromjena />} />
-          <Route path={RouteNames.REZERVACIJE} element={<RezervacijaPregled />} />
-          <Route path={RouteNames.REZERVACIJE_PROMJENA} element={<RezervacijaPromjena />} />
-          <Route path={RouteNames.REZERVACIJE_NOVE} element={<RezervacijaNova />} />
-          <Route path={RouteNames.REZERVACIJE_EVIDENTIRAJ} element={<RezervacijaEvidentiraj />} />
-          <Route path={RouteNames.GENERIRANJE_PODATAKA} element={<GeneriranjePodataka />} />
+          <Route path={RouteNames.LOGIN} element={<Login />} />
+          <Route path={RouteNames.REGISTRACIJA} element={<Registracija />} />
+
+          {/* rute dostupne samo prijavljenima (uvjetno) */}
+          {isLoggedIn && (
+            <>
+              <Route path={RouteNames.NADZORNA_PLOCA || '/nadzorna'} element={<NadzornaPloca />} />
+
+              <Route path={RouteNames.DOGADJAJI || '/dogadjaji'} element={<DogadjajPregled />} />
+              {authUser?.uloga === 'admin' && (
+                <>
+                  <Route path={RouteNames.DOGADJAJI_NOVI || '/dogadjaji/novi'} element={<DogadjajNovi />} />
+                  <Route path={RouteNames.DOGADJAJI_PROMJENA || '/dogadjaji/:sifra'} element={<DogadjajPromjena />} />
+                </>
+              )}
+
+              {authUser?.uloga === 'admin' && (
+                <>
+                  <Route path={RouteNames.KORISNICI || '/korisnici'} element={<KorisnikPregled />} />
+                  <Route path={RouteNames.KORISNICI_NOVI || '/korisnici/novi'} element={<KorisnikNovi />} />
+                  <Route path={RouteNames.KORISNICI_PROMJENA || '/korisnici/:sifra'} element={<KorisnikPromjena />} />
+                </>
+              )}
+
+              <Route path={RouteNames.REZERVACIJE || '/rezervacije'} element={<RezervacijaPregled />} />
+              <Route path={RouteNames.REZERVACIJE_NOVE || '/rezervacije/novi'} element={<RezervacijaNova />} />
+              <Route path={RouteNames.REZERVACIJE_PROMJENA || '/rezervacije/:sifra'} element={<RezervacijaPromjena />} />
+              {authUser?.uloga === 'admin' && (
+                <Route path={RouteNames.REZERVACIJE_EVIDENTIRAJ || '/rezervacije/evidentiraj/:sifra'} element={<RezervacijaEvidentiraj />} />
+              )}
+
+              {authUser?.uloga === 'admin' && (
+                <Route path={RouteNames.GENERIRANJE_PODATAKA || '/generiranje'} element={<GeneriranjePodataka />} />
+              )}
+            </>
+          )}
+
+          {/* fallback */}
+          <Route path="*" element={<Navigate to={RouteNames.HOME || '/'} replace />} />
         </Routes>
+
         <hr />
         <div className='footer'>&copy; Event Booking APP</div>
       </Container>
