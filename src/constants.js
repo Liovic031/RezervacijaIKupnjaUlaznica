@@ -29,7 +29,7 @@ export const RouteNames = {
 // memorija, localstorage, firebase
 export const DATA_SOURCE = 'localstorage';
 
-// PrefixStorage – tvoja verzija profesorovog
+
 export const PrefixStorage = {
     DOGADJAJI: 'dogadjaji',
     KORISNICI: 'korisnici',

@@ -1,4 +1,3 @@
-// src/components/Izbornik.jsx
 import React from 'react'
 import { Container, Nav, Navbar, Button } from "react-bootstrap"
 import { Link } from "react-router-dom"
@@ -18,18 +17,18 @@ export default function Izbornik() {
           <Nav className="me-auto">
             <Nav.Link as={Link} to={RouteNames?.HOME || '/'}>Home</Nav.Link>
             <Nav.Link as={Link} to={RouteNames?.DOGADJAJI || '/dogadjaji'}>Događaji</Nav.Link>
-            <Nav.Link as={Link} to={RouteNames?.REZERVACIJE || '/rezervacije'}>Rezervacije</Nav.Link>
+            <Nav.Link as={Link} to={RouteNames?.REZERVACIJE || '/rezervacije'}>Rezervacije</Nav.Link>     
+            {isLoggedIn && authUser?.uloga === 'admin' && (
+              <>
+                <Nav.Link as={Link} to={RouteNames?.KORISNICI || '/korisnici'}>Korisnici</Nav.Link>
+                <Nav.Link as={Link} to={RouteNames?.GENERIRANJE_PODATAKA || '/generiranje'}>Generiranje podataka</Nav.Link>
+              </>
+            )}
             {isLoggedIn && (
               <>
                 <Nav.Link as={Link} to={RouteNames.NADZORNA_PLOCA}>
                   Nadzorna ploča
                 </Nav.Link>
-              </>
-            )}
-            {isLoggedIn && authUser?.uloga === 'admin' && (
-              <>
-                <Nav.Link as={Link} to={RouteNames?.KORISNICI || '/korisnici'}>Korisnici</Nav.Link>
-                <Nav.Link as={Link} to={RouteNames?.GENERIRANJE_PODATAKA || '/generiranje'}>Generiranje podataka</Nav.Link>
               </>
             )}
           </Nav>

@@ -30,7 +30,6 @@ export default function Registracija() {
       return;
     }
 
-    // nakon registracije redirect na login
     navigate(RouteNames.LOGIN);
   }
 
