@@ -1,6 +1,6 @@
 import { use, useEffect, useState } from "react";
 import KorisnikService from "../../services/korisnici/KorisnikService";
-import { Button, Table } from "react-bootstrap";
+import { Button, Row, Col, Card } from "react-bootstrap";
 import FormatDatuma from "../../components/ForamtDatuma";
 import { RouteNames } from "../../constants";
 import { Link, useNavigate } from "react-router-dom";
@@ -148,57 +148,82 @@ export default function KorisnikPregled() {
     return (
         <>
             <div className="d-flex justify-content-center my-1">
-                <Link to={RouteNames.KORISNICI_NOVI} style={{ color: "#353535" }} className="fs-1 dodaj_item">
+                <Link to={RouteNames.KORISNICI_NOVI} className="fs-1 dodaj_item" style={{ color: "#353535" }}>
                     <i className="bi bi-plus-circle-fill"></i>
                 </Link>
             </div>
-            <div className="my-3">
-                <input
-                    type="text"
-                    className="form-control"
-                    placeholder="Pretraži korisnike (ime, prezime, email)..."
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                />
+            <div className="d-flex justify-content-end mb-3">
+                <select
+                    className="form-select w-auto"
+                    value={sortConfig.key || ""}
+                    onChange={(e) => handleSort(e.target.value)}
+                >
+                    <option value="">Sortiraj...</option>
+                    <option value="ime">Ime</option>
+                    <option value="prezime">Prezime</option>
+                    <option value="email">Email</option>
+                    <option value="datumKreiranja">Datum kreiranja</option>
+                </select>
             </div>
 
-            <div className="table-responsive">
-                <Table>
-                    <thead>
-                        <tr>
-                            <th role="button" onClick={() => handleSort('ime')}>Ime {getSortIcon('ime')}</th>
-                            <th role="button" onClick={() => handleSort('prezime')}>Prezime {getSortIcon('prezime')}</th>
-                            <th role="button" onClick={() => handleSort('email')}>Email {getSortIcon('email')}</th>
-                            <th role="button" className="text-nowrap" onClick={() => handleSort('datumKreiranja')}>Kreiran {getSortIcon('datumKreiranja')}</th>
-                            <th>Akcija</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {sortedKorisnici() && sortedKorisnici().slice(0, visibleCount).map((korisnik) => (
-                            <tr key={korisnik.sifra}>
-                                <td>{korisnik.ime}</td>
-                                <td>{korisnik.prezime}</td>
-                                <td>{korisnik.email}</td>
-                                <td><FormatDatuma datum={korisnik.datumKreiranja} /></td>
-                                <td>
+            <Row xs={1} md={2} lg={3} xxl={4}>
+                {sortedKorisnici() && sortedKorisnici().slice(0, visibleCount).map((korisnik) => (
+                    <Col key={korisnik.sifra} className="mb-4">
+                        <Card className="card-korisnik h-100">
+
+                            <img
+                                src={korisnik.slika}
+                                alt="korisnik"
+                                className="card-korisnik-img"
+                            />
+
+                            <div className="d-flex justify-content-between align-items-start p-3 card-korisnik-header">
+                                <Card.Title className="mt-1 fs-5">
+                                    {korisnik.ime} {korisnik.prezime}
+                                </Card.Title>
+
+                                <div className="kartica_ikone d-flex gap-2">
                                     <i
                                         className="bi bi-pencil-square fs-4 text-primary"
                                         role="button"
                                         onClick={() => navigate(`/korisnici/${korisnik.sifra}`)}
                                     ></i>
-                                    &nbsp;&nbsp;
+
                                     <i
                                         className="bi bi-trash fs-4 text-danger"
                                         role="button"
                                         onClick={() => obrisi(korisnik.sifra)}
                                     ></i>
-                                </td>
-                            </tr>
-                        ))}
-                    </tbody>
-                </Table>
-            </div>
-            {visibleCount < sortedKorisnici().length && (
+                                </div>
+                            </div>
+
+                            <Card.Body className="pt-3">
+                                <Card.Text>
+                                    <span className="card-korisnik-label">Email:</span> {korisnik.email}
+                                </Card.Text>
+
+                                <Card.Text>
+                                    <span className="card-korisnik-label">Kreiran:</span>{" "}
+                                    <FormatDatuma datum={korisnik.datumKreiranja} />
+                                </Card.Text>
+
+                                <Card.Text>
+                                    <span className="card-korisnik-label">Uloga:</span>{" "}
+                                    {korisnik.uloga === "admin" ? (
+                                        <span className="text-danger fw-bold">Admin</span>
+                                    ) : (
+                                        "Korisnik"
+                                    )}
+                                </Card.Text>
+                            </Card.Body>
+
+                        </Card>
+                    </Col>
+                ))}
+            </Row>
+
+
+            {visibleCount < korisnici.length && (
                 <div className="text-center mt-4">
                     <Button className="ucitaj" onClick={ucitajJos}>
                         Učitaj više
@@ -206,5 +231,6 @@ export default function KorisnikPregled() {
                 </div>
             )}
         </>
+
     );
 }                               
