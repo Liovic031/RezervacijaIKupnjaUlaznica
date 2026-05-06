@@ -37,5 +37,6 @@ export default {
     promjeni: (sifra, korisnik) => AktivniServis.promjeni(sifra, korisnik),
     obrisi: (sifra) => AktivniServis.obrisi(sifra),
     oslobodiKarte: (rezSifra) => AktivniServis.oslobodiKarte(rezSifra),
-    obrisiZaDogadjaj: (sifra) => AktivniServis.obrisiZaDogadjaj(sifra)
+    obrisiZaDogadjaj: (sifra) => AktivniServis.obrisiZaDogadjaj(sifra),
+    promjeniLozinku: (sifra, novaLozinka) => AktivniServis.promjeniLozinku(sifra, novaLozinka)
 };

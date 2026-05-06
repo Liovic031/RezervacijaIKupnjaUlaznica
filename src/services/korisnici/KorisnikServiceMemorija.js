@@ -67,4 +67,17 @@ async function obrisi(sifra) {
   return { success: true };
 }
 
-export default { get, dodaj, getBySifra, getByEmail, promjeni, obrisi };
+async function promjeniLozinku(sifra, novaLozinka) {
+    const index = korisnici.findIndex(k => k.sifra == sifra);
+
+    if (index === -1) {
+        return { success: false, message: "Korisnik nije pronađen" };
+    }
+
+    korisnici[index].lozinkaHash = novaLozinka;
+    return { success: true };
+}
+
+
+
+export default { get, dodaj, getBySifra, getByEmail, promjeni, obrisi, promjeniLozinku };

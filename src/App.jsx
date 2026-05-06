@@ -21,6 +21,7 @@ import Login from './pages/Login'
 import Registracija from './pages/Registracija'
 import NadzornaPloca from './pages/NadzornaPloca'
 import useAuth from './hooks/useAuth'
+import KorisnikPromjenaLozinke from './pages/korisnici/KorisnikPromjenaLozinke'
 
 function App() {
   const { isLoggedIn, authUser } = useAuth()
@@ -39,7 +40,9 @@ function App() {
           {/* rute dostupne samo prijavljenima (uvjetno) */}
           {isLoggedIn && (
             <>
-              <Route path={RouteNames.NADZORNA_PLOCA || '/nadzorna'} element={<NadzornaPloca />} />
+              <Route path={RouteNames.NADZORNA_PLOCA} element={<NadzornaPloca />} />
+              <Route path={RouteNames.KORISNICI_PROMJENA_LOZINKE} element={<KorisnikPromjenaLozinke />} />
+
 
               <Route path={RouteNames.DOGADJAJI || '/dogadjaji'} element={<DogadjajPregled />} />
               {authUser?.uloga === 'admin' && (

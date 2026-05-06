@@ -19,6 +19,13 @@ export default function Izbornik() {
             <Nav.Link as={Link} to={RouteNames?.HOME || '/'}>Home</Nav.Link>
             <Nav.Link as={Link} to={RouteNames?.DOGADJAJI || '/dogadjaji'}>Događaji</Nav.Link>
             <Nav.Link as={Link} to={RouteNames?.REZERVACIJE || '/rezervacije'}>Rezervacije</Nav.Link>
+            {isLoggedIn && (
+              <>
+                <Nav.Link as={Link} to={RouteNames.NADZORNA_PLOCA}>
+                  Nadzorna ploča
+                </Nav.Link>
+              </>
+            )}
             {isLoggedIn && authUser?.uloga === 'admin' && (
               <>
                 <Nav.Link as={Link} to={RouteNames?.KORISNICI || '/korisnici'}>Korisnici</Nav.Link>

@@ -14,6 +14,8 @@ export const RouteNames = {
     KORISNICI: '/korisnici',
     KORISNICI_NOVI: '/korisnici/novi',
     KORISNICI_PROMJENA: '/korisnici/:sifra',
+    KORISNICI_PROMJENA_LOZINKE: '/korisnici/:sifra/lozinka',
+
 
     REZERVACIJE: '/rezervacije',
     REZERVACIJE_NOVE: '/rezervacije/nove',
@@ -25,7 +27,7 @@ export const RouteNames = {
 };
 
 // memorija, localstorage, firebase
-export const DATA_SOURCE = 'memorija';
+export const DATA_SOURCE = 'localstorage';
 
 // PrefixStorage – tvoja verzija profesorovog
 export const PrefixStorage = {

@@ -70,6 +70,28 @@ async function promjeni(sifra, korisnik) {
 
   return { success: true, data: korisnici[index] };
 }
+// promjena lozinke
+function getKorisnici() {
+    return JSON.parse(localStorage.getItem("korisnici")) || [];
+}
+function spremiKorisnike(korisnici) {
+    localStorage.setItem("korisnici", JSON.stringify(korisnici));
+}
+async function promjeniLozinku(sifra, novaLozinka) {
+    const korisnici = getKorisnici();
+    const index = korisnici.findIndex(k => k.sifra == sifra);
+
+    if (index === -1) {
+        return { success: false, message: "Korisnik nije pronađen" };
+    }
+
+    korisnici[index].lozinkaHash = bcrypt.hashSync(novaLozinka, 10);
+    spremiKorisnike(korisnici);
+
+    return { success: true };
+}
+
+
 
 async function obrisi(sifra) {
   const rez = await RezervacijaService.get();
@@ -86,4 +108,4 @@ async function obrisi(sifra) {
   return { success: true, message: "Obrisano" };
 }
 
-export default { get, getBySifra, getByEmail, dodaj, promjeni, obrisi };
+export default { get, getBySifra, getByEmail, dodaj, promjeni, obrisi, promjeniLozinku };

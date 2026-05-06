@@ -1,6 +1,5 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
 import { IME_APLIKACIJE } from "../constants";
-import ticketAnimation from "../assets/animations/ticketblue.lottie";
 import { useEffect, useState } from "react";
 import DogadjajService from "../services/dogadjaji/DogadjajService";
 import KorisnikService from "../services/korisnici/KorisnikService";
@@ -93,7 +92,7 @@ export default function Home() {
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
         <DotLottieReact
-          src={ticketAnimation}
+          src="/src/assets/animations/ticketblue.lottie"
           loop
           autoplay
           style={{ width: 260, height: 260 }}
