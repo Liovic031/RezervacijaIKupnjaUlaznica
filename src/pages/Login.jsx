@@ -32,6 +32,7 @@ export default function Login() {
                 <Card.Body>
                     <Card.Title className="mb-4">Podaci za prijavu</Card.Title>
                     <p className="text-muted">Za test: admin@edunova.hr / Edunova123!</p>
+                    <p className="text-muted">svi generirani korisnici imaju istu lozinku: Test123!</p>
 
                     {errors.opce && <div className="alert alert-danger">{errors.opce}</div>}
 
