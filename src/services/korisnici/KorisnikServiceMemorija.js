@@ -11,7 +11,7 @@ async function get() {
 }
 
 async function getBySifra(sifra) {
-  return { success: true, data: korisnici.find(k => k.sifra === parseInt(sifra)) || null };
+  return { success: true, data: korisnici.find(k => String(k.sifra) === String(sifra)) || null };
 }
 
 async function getByEmail(email) {
@@ -20,7 +20,12 @@ async function getByEmail(email) {
 }
 
 async function dodaj(korisnik) {
-  korisnik.sifra = korisnici.length > 0 ? Math.max(...korisnici.map(k => k.sifra)) + 1 : 1;
+
+  korisnik.sifra = String(
+    korisnici.length > 0
+      ? Math.max(...korisnici.map(k => Number(k.sifra))) + 1
+      : 1
+  );
 
   if (korisnik.lozinka) {
     const salt = bcrypt.genSaltSync(10);
@@ -32,7 +37,7 @@ async function dodaj(korisnik) {
 
   korisnik.datumKreiranja = korisnik.datumKreiranja || new Date().toISOString();
   korisnik.uloga = korisnik.uloga || "korisnik";
-  
+
   korisnik.slika = korisnik.slika || defaultSlika;
 
 
@@ -41,7 +46,7 @@ async function dodaj(korisnik) {
 }
 
 async function promjeni(sifra, korisnik) {
-  const index = korisnici.findIndex(k => k.sifra === parseInt(sifra));
+  const index = korisnici.findIndex(k => String(k.sifra) === String(sifra));
   if (index === -1) return { success: false, message: "Korisnik ne postoji." };
 
   if (korisnik.lozinka) {
@@ -57,25 +62,25 @@ async function promjeni(sifra, korisnik) {
 async function obrisi(sifra) {
   const rez = await RezervacijaService.get();
   for (let r of rez.data) {
-    if (r.korisnikSifra === parseInt(sifra)) {
+    if (String(r.korisnikSifra) === String(sifra)) {
       await RezervacijaService.obrisi(r.sifra);
     }
   }
 
-  const index = korisnici.findIndex(k => k.sifra === parseInt(sifra));
+  const index = korisnici.findIndex(k => String(k.sifra) === String(sifra));
   if (index !== -1) korisnici.splice(index, 1);
   return { success: true };
 }
 
 async function promjeniLozinku(sifra, novaLozinka) {
-    const index = korisnici.findIndex(k => k.sifra == sifra);
+  const index = korisnici.findIndex(k => String(k.sifra) == String(sifra));
 
-    if (index === -1) {
-        return { success: false, message: "Korisnik nije pronađen" };
-    }
+  if (index === -1) {
+    return { success: false, message: "Korisnik nije pronađen" };
+  }
 
-    korisnici[index].lozinkaHash = novaLozinka;
-    return { success: true };
+  korisnici[index].lozinkaHash = novaLozinka;
+  return { success: true };
 }
 
 

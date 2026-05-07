@@ -1,4 +1,3 @@
-// src/constants.js
 export const IME_APLIKACIJE = 'Event Booking APP';
 
 export const RouteNames = {
@@ -35,5 +34,5 @@ export const PrefixStorage = {
     KORISNICI: 'korisnici',
     KARTE: 'karte',
     REZERVACIJE: 'rezervacije',
-    AUTH_USER: 'auth_user' // dodano: ključ za pohranu prijavljenog korisnika
+    AUTH_USER: 'auth_user'
 };

@@ -32,7 +32,7 @@ export default function KorisnikPregled() {
         const odgovor = await RezervacijaService.get();
         if (!odgovor.success) return 0;
 
-        return odgovor.data.filter(r => r.korisnikSifra === parseInt(sifraKorisnika)).length;
+        return odgovor.data.filter(r => String(r.korisnikSifra) === String(sifraKorisnika)).length;
     }
 
     async function obrisi(sifra) {

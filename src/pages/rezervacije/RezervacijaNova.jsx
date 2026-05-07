@@ -42,7 +42,7 @@ export default function RezervacijaNova() {
             .filter(k => k.broj <= maxBroj)
             .filter(k =>
                 !k.rezervirano ||
-                !rezervacije.data.some(r => r.sifra === k.rezervacijaSifra)
+                !rezervacije.data.some(r => String(r.sifra) === String(k.rezervacijaSifra))
             );
 
         setKarte(filtrirane);

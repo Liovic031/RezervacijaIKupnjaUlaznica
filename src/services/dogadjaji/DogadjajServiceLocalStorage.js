@@ -19,7 +19,7 @@ async function getBySifra(sifra) {
     const dogadjaji = dohvatiSveIzStorage();
     return {
         success: true,
-        data: dogadjaji.find(s => s.sifra === parseInt(sifra))
+        data: dogadjaji.find(s => String(s.sifra) === String(sifra))
     };
 }
 
@@ -28,8 +28,8 @@ async function dodaj(dogadjaj) {
 
     dogadjaj.sifra =
         dogadjaji.length > 0
-            ? Math.max(...dogadjaji.map(s => s.sifra)) + 1
-            : 1;
+            ? String(Math.max(...dogadjaji.map(s => Number(s.sifra))) + 1)
+            : "1";
 
     dogadjaji.push(dogadjaj);
     spremiUStorage(dogadjaji);
@@ -41,13 +41,13 @@ async function dodaj(dogadjaj) {
 
 async function promjeni(sifra, dogadjaj) {
     const dogadjaji = dohvatiSveIzStorage();
-    const index = dogadjaji.findIndex(s => s.sifra === parseInt(sifra));
+    const index = dogadjaji.findIndex(s => String(s.sifra) === String(sifra));
 
     if (index === -1) {
         return { success: false, message: "Događaj ne postoji." };
     }
 
-    const sveKarte = (await KartaService.getByDogadjaj(parseInt(sifra))).data;
+    const sveKarte = (await KartaService.getByDogadjaj(String(sifra))).data;
     const rezervirane = sveKarte.filter(k => k.rezervirano);
 
     if (rezervirane.length > 0) {
@@ -61,9 +61,9 @@ async function promjeni(sifra, dogadjaj) {
     }
 
     if (rezervirane.length === 0) {
-        await KartaService.obrisiZaDogadjaj(parseInt(sifra));
+        await KartaService.obrisiZaDogadjaj(String(sifra));
         await KartaService.generirajZaDogadjaj({
-            sifra: parseInt(sifra),
+            sifra: String(sifra),
             brojMjesta: dogadjaj.brojMjesta
         });
     }
@@ -77,15 +77,15 @@ async function promjeni(sifra, dogadjaj) {
 async function obrisi(sifra) {
     const rez = await RezervacijaService.get();
     for (let r of rez.data) {
-        if (r.dogadjajSifra === parseInt(sifra)) {
+        if (String(r.dogadjajSifra) === String(sifra)) {
             await RezervacijaService.obrisi(r.sifra);
         }
     }
 
-    await KartaService.obrisiZaDogadjaj(parseInt(sifra));
+    await KartaService.obrisiZaDogadjaj(String(sifra));
 
     let dogadjaji = dohvatiSveIzStorage();
-    dogadjaji = dogadjaji.filter(s => s.sifra !== parseInt(sifra));
+    dogadjaji = dogadjaji.filter(s => String(s.sifra) !== String(sifra));
     spremiUStorage(dogadjaji);
 
     return { success: true, message: "Obrisano" };

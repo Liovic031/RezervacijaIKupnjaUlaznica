@@ -37,7 +37,7 @@ export default function DogadjajPregled() {
         const odgovor = await RezervacijaService.get();
         if (!odgovor.success) return 0;
 
-        return odgovor.data.filter(r => r.dogadjajSifra === parseInt(sifraDogadjaja)).length;
+        return odgovor.data.filter(r => String(r.dogadjajSifra) === String(sifraDogadjaja)).length;
     }
 
     async function obrisi(sifra) {

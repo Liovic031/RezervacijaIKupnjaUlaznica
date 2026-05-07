@@ -19,7 +19,7 @@ async function get() {
 
 async function getBySifra(sifra) {
   const korisnici = dohvatiSveIzStorage();
-  return { success: true, data: korisnici.find(k => k.sifra === parseInt(sifra)) || null };
+  return { success: true, data: korisnici.find(k => String(k.sifra) === String(sifra)) || null };
 }
 
 async function getByEmail(email) {
@@ -31,7 +31,11 @@ async function getByEmail(email) {
 async function dodaj(korisnik) {
   const korisnici = dohvatiSveIzStorage();
 
-  korisnik.sifra = korisnici.length > 0 ? Math.max(...korisnici.map(k => k.sifra)) + 1 : 1;
+  korisnik.sifra = String(
+    korisnici.length > 0
+      ? Math.max(...korisnici.map(k => Number(k.sifra))) + 1
+      : 1
+  );
 
   if (korisnik.lozinka) {
     const salt = bcrypt.genSaltSync(10);
@@ -55,7 +59,7 @@ async function dodaj(korisnik) {
 
 async function promjeni(sifra, korisnik) {
   const korisnici = dohvatiSveIzStorage();
-  const index = korisnici.findIndex(k => k.sifra === parseInt(sifra));
+  const index = korisnici.findIndex(k => String(k.sifra) === String(sifra));
 
   if (index === -1) return { success: false, message: "Korisnik ne postoji." };
 
@@ -70,25 +74,26 @@ async function promjeni(sifra, korisnik) {
 
   return { success: true, data: korisnici[index] };
 }
+
 // promjena lozinke
 function getKorisnici() {
-    return JSON.parse(localStorage.getItem("korisnici")) || [];
+  return JSON.parse(localStorage.getItem("korisnici")) || [];
 }
 function spremiKorisnike(korisnici) {
-    localStorage.setItem("korisnici", JSON.stringify(korisnici));
+  localStorage.setItem("korisnici", JSON.stringify(korisnici));
 }
 async function promjeniLozinku(sifra, novaLozinka) {
-    const korisnici = getKorisnici();
-    const index = korisnici.findIndex(k => k.sifra == sifra);
+  const korisnici = getKorisnici();
+  const index = korisnici.findIndex(k => String(k.sifra) === String(sifra));
 
-    if (index === -1) {
-        return { success: false, message: "Korisnik nije pronađen" };
-    }
+  if (index === -1) {
+    return { success: false, message: "Korisnik nije pronađen" };
+  }
 
-    korisnici[index].lozinkaHash = bcrypt.hashSync(novaLozinka, 10);
-    spremiKorisnike(korisnici);
+  korisnici[index].lozinkaHash = bcrypt.hashSync(novaLozinka, 10);
+  spremiKorisnike(korisnici);
 
-    return { success: true };
+  return { success: true };
 }
 
 
@@ -96,13 +101,13 @@ async function promjeniLozinku(sifra, novaLozinka) {
 async function obrisi(sifra) {
   const rez = await RezervacijaService.get();
   for (let r of rez.data) {
-    if (r.korisnikSifra === parseInt(sifra)) {
-      await RezervacijaService.obrisi(r.sifra);
+    if (String(r.korisnikSifra) === String(sifra)) {
+        await RezervacijaService.obrisi(r.sifra);
     }
   }
 
   let korisnici = dohvatiSveIzStorage();
-  korisnici = korisnici.filter(k => k.sifra !== parseInt(sifra));
+  korisnici = korisnici.filter(k => String(k.sifra) !== String(sifra));
   spremiUStorage(korisnici);
 
   return { success: true, message: "Obrisano" };

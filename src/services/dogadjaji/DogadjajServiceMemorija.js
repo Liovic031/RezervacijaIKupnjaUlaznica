@@ -2,21 +2,19 @@ import { dogadjaji } from "./DogadjajPodaci";
 import KartaService from "../karte/KartaService";
 import RezervacijaService from "../rezervacije/RezervacijaService";
 
-// READ
 async function get() {
     return { success: true, data: [...dogadjaji] };
 }
 
 async function getBySifra(sifra) {
-    return { success: true, data: dogadjaji.find(d => d.sifra === parseInt(sifra)) };
+    return { success: true, data: dogadjaji.find(d => String(d.sifra) === String(sifra)) };
 }
 
-// CREATE
 async function dodaj(dogadjaj) {
     dogadjaj.sifra =
         dogadjaji.length > 0
-            ? dogadjaji[dogadjaji.length - 1].sifra + 1
-            : 1;
+            ? String(Number(dogadjaji[dogadjaji.length - 1].sifra) + 1)
+            : "1";
 
     dogadjaji.push(dogadjaj);
 
@@ -25,9 +23,8 @@ async function dodaj(dogadjaj) {
     return { success: true, data: dogadjaj };
 }
 
-// UPDATE
 async function promjeni(sifra, dogadjaj) {
-    const index = dogadjaji.findIndex(d => d.sifra === parseInt(sifra));
+    const index = dogadjaji.findIndex(d => String(d.sifra) === String(sifra));
 
     if (index === -1) {
         return { success: false, message: "Događaj ne postoji." };
@@ -38,22 +35,17 @@ async function promjeni(sifra, dogadjaj) {
     return { success: true, data: dogadjaji[index] };
 }
 
-// DELETE
 async function obrisi(sifra) {
-
-    // obriši rezervacije
     const rez = await RezervacijaService.get();
     for (let r of rez.data) {
-        if (r.dogadjajSifra === parseInt(sifra)) {
+        if (String(r.dogadjajSifra) === String(sifra)) {
             await RezervacijaService.obrisi(r.sifra);
         }
     }
 
-    // obriši karte
-    await KartaService.obrisiZaDogadjaj(parseInt(sifra));
+    await KartaService.obrisiZaDogadjaj(String(sifra));
 
-    // obriši događaj iz memorije
-    const index = dogadjaji.findIndex(d => d.sifra === parseInt(sifra));
+    const index = dogadjaji.findIndex(d => String(d.sifra) === String(sifra));
     if (index !== -1) dogadjaji.splice(index, 1);
 
     return { success: true, message: "Obrisano" };

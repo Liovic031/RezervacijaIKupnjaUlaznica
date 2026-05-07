@@ -127,7 +127,7 @@ export default function RezervacijaPregled() {
                         <Row className="mt-3">
                             <Col className="m-2">
                                 <h5 className="mb-3 naslov-rezervacije">
-                                    {dogadjaji.find(d => d.sifra === rez.dogadjajSifra)?.naziv || "Nepoznat događaj"}
+                                    {dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra))?.naziv || "Nepoznat događaj"}
                                 </h5>
                             </Col>
                             <Col>
@@ -150,8 +150,8 @@ export default function RezervacijaPregled() {
                                         onClick={() =>
                                             RezervacijaPDFGenerator(
                                                 rez,
-                                                dogadjaji.find(d => d.sifra === rez.dogadjajSifra),
-                                                korisnici.find(k => k.sifra === rez.korisnikSifra)
+                                                dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra)),
+                                                korisnici.find(k => String(k.sifra) === String(rez.korisnikSifra))
                                             )
                                         }
                                     >
@@ -166,15 +166,15 @@ export default function RezervacijaPregled() {
                                     <tbody>
                                         <tr>
                                             <th className="w-50">Datum događaja:</th>
-                                            <td>{dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
-                                                <FormatDatuma datum={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).datumOdrzavanja} />
+                                            <td>{dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra)) ? (
+                                                <FormatDatuma datum={dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra)).datumOdrzavanja} />
                                             ) : "?"}</td>
                                         </tr>
                                         <tr>
                                             <th>Cijena:</th>
-                                            <td>{dogadjaji.find(d => d.sifra === rez.dogadjajSifra) ? (
+                                            <td>{dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra)) ? (
                                                 <NumericFormat
-                                                    value={dogadjaji.find(d => d.sifra === rez.dogadjajSifra).cijena * rezervacije.find(r => r.sifra === rez.sifra).brojeviKarata.length}
+                                                    value={dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra)).cijena * rezervacije.find(r => String(r.sifra) === String(rez.sifra)).brojeviKarata.length}
                                                     displayType={'text'}
                                                     thousandSeparator='.'
                                                     decimalSeparator=','
@@ -186,8 +186,8 @@ export default function RezervacijaPregled() {
                                         </tr>
                                         <tr>
                                             <th>Korisnik:</th>
-                                            <td>{korisnici.find(k => k.sifra === rez.korisnikSifra)
-                                                ? `${korisnici.find(k => k.sifra === rez.korisnikSifra).ime} ${korisnici.find(k => k.sifra === rez.korisnikSifra).prezime}`
+                                            <td>{korisnici.find(k => String(k.sifra) === String(rez.korisnikSifra))
+                                                ? `${korisnici.find(k => String(k.sifra) === String(rez.korisnikSifra)).ime} ${korisnici.find(k => String(k.sifra) === String(rez.korisnikSifra)).prezime}`
                                                 : "Nepoznato"}</td>
                                         </tr>
                                         <tr>
@@ -214,8 +214,8 @@ export default function RezervacijaPregled() {
                                         )}
                                         <tr>
                                             <th>Ukupan broj mjesta:</th>
-                                            <td>{dogadjaji.find(d => d.sifra === rez.dogadjajSifra)
-                                                ? `${dogadjaji.find(d => d.sifra === rez.dogadjajSifra).brojMjesta}` : "Nepoznato"
+                                            <td>{dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra))
+                                                ? `${dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra)).brojMjesta}` : "Nepoznato"
                                             }</td>
 
                                         </tr>
@@ -233,9 +233,9 @@ export default function RezervacijaPregled() {
                                         {getSeatBoxes(
                                             rez,
                                             karte
-                                                .filter(k => k.dogadjajSifra === rez.dogadjajSifra)
+                                                .filter(k => String(k.dogadjajSifra) === String(rez.dogadjajSifra))
                                                 .filter(k => {
-                                                    const dog = dogadjaji.find(d => d.sifra === rez.dogadjajSifra);
+                                                    const dog = dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra));
                                                     return dog ? k.broj <= dog.brojMjesta : true;
                                                 })
                                         )}

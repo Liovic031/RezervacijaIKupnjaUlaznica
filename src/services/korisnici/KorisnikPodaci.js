@@ -6,7 +6,7 @@ const hashiranaLozinka = bcrypt.hashSync("Edunova123!", 10);
 
 export const korisnici = [
   {
-    sifra: 1,
+    sifra: "1",
     ime: "Admin",
     prezime: "Edunova",
     email: "admin@edunova.hr",

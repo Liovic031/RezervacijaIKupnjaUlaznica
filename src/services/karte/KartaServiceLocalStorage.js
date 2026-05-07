@@ -16,24 +16,30 @@ async function get() {
 async function getByDogadjaj(sifra) {
     return {
         success: true,
-        data: dohvatiSveIzStorage().filter(k => k.dogadjajSifra === parseInt(sifra))
+        data: dohvatiSveIzStorage().filter(
+            k => String(k.dogadjajSifra) === String(sifra)
+        )
     };
 }
 
 async function generirajZaDogadjaj(dogadjaj) {
     const sve = dohvatiSveIzStorage();
 
-    const postojece = sve.filter(k => k.dogadjajSifra === dogadjaj.sifra);
+    const postojece = sve.filter(
+        k => String(k.dogadjajSifra) === String(dogadjaj.sifra)
+    );
     if (postojece.length > 0) return;
 
-    const maxSifra = sve.length > 0 ? Math.max(...sve.map(k => k.sifra)) : 0;
+    const maxSifra = sve.length > 0
+        ? Math.max(...sve.map(k => Number(k.sifra)))
+        : 0;
 
     const nove = [];
 
     for (let i = 1; i <= dogadjaj.brojMjesta; i++) {
         nove.push({
-            sifra: maxSifra + i,
-            dogadjajSifra: dogadjaj.sifra,
+            sifra: String(maxSifra + i),
+            dogadjajSifra: String(dogadjaj.sifra),
             broj: i,
             rezervirano: false,
             rezervacijaSifra: null
@@ -47,9 +53,12 @@ async function rezervirajKarte(dogadjajSifra, brojevi, rezervacijaSifra) {
     const karte = dohvatiSveIzStorage();
 
     karte.forEach(k => {
-        if (k.dogadjajSifra === dogadjajSifra && brojevi.includes(k.broj)) {
+        if (
+            String(k.dogadjajSifra) === String(dogadjajSifra) &&
+            brojevi.includes(k.broj)
+        ) {
             k.rezervirano = true;
-            k.rezervacijaSifra = rezervacijaSifra;
+            k.rezervacijaSifra = String(rezervacijaSifra);
         }
     });
 
@@ -61,7 +70,7 @@ async function oslobodiKarte(rezervacijaSifra) {
     const karte = dohvatiSveIzStorage();
 
     karte.forEach(k => {
-        if (k.rezervacijaSifra === parseInt(rezervacijaSifra)) {
+        if (String(k.rezervacijaSifra) === String(rezervacijaSifra)) {
             k.rezervirano = false;
             k.rezervacijaSifra = null;
         }
@@ -73,7 +82,11 @@ async function oslobodiKarte(rezervacijaSifra) {
 
 async function obrisiZaDogadjaj(dogadjajSifra) {
     let karte = dohvatiSveIzStorage();
-    karte = karte.filter(k => k.dogadjajSifra !== parseInt(dogadjajSifra));
+
+    karte = karte.filter(
+        k => String(k.dogadjajSifra) !== String(dogadjajSifra)
+    );
+
     spremiUStorage(karte);
     return { success: true };
 }

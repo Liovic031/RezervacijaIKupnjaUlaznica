@@ -18,7 +18,7 @@ async function getBySifra(sifra) {
     const rezervacije = dohvatiSveIzStorage();
     return {
         success: true,
-        data: rezervacije.find(r => r.sifra === parseInt(sifra))
+        data: rezervacije.find(r => String(r.sifra) === String(sifra))
     };
 }
 
@@ -27,8 +27,8 @@ async function dodaj(rezervacija) {
 
     rezervacija.sifra =
         rezervacije.length > 0
-            ? Math.max(...rezervacije.map(r => r.sifra)) + 1
-            : 1;
+            ? String(Math.max(...rezervacije.map(r => Number(r.sifra))) + 1)
+            : "1";
 
     rezervacija.evidentirano = false;
     rezervacija.datumEvidentiranja = null;
@@ -41,7 +41,7 @@ async function dodaj(rezervacija) {
 
 async function promjeni(sifra, rezervacija) {
     const rezervacije = dohvatiSveIzStorage();
-    const index = rezervacije.findIndex(r => r.sifra === parseInt(sifra));
+    const index = rezervacije.findIndex(r => String(r.sifra) === String(sifra));
 
     if (index === -1) {
         return { success: false, message: "Rezervacija ne postoji." };
@@ -60,7 +60,7 @@ async function obrisi(sifra) {
 
     // 2) Obriši rezervaciju
     let rezervacije = dohvatiSveIzStorage();
-    rezervacije = rezervacije.filter(r => r.sifra !== parseInt(sifra));
+    rezervacije = rezervacije.filter(r => String(r.sifra) !== String(sifra));
     spremiUStorage(rezervacije);
 
     return { success: true, message: "Obrisano" };

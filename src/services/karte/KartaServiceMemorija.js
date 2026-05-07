@@ -7,20 +7,24 @@ async function get() {
 async function getByDogadjaj(sifra) {
     return {
         success: true,
-        data: karte.filter(k => k.dogadjajSifra === parseInt(sifra))
+        data: karte.filter(k => String(k.dogadjajSifra) === String(sifra))
     };
 }
 
 async function generirajZaDogadjaj(dogadjaj) {
-    const postojece = karte.filter(k => k.dogadjajSifra === dogadjaj.sifra);
+    const postojece = karte.filter(
+        k => String(k.dogadjajSifra) === String(dogadjaj.sifra)
+    );
     if (postojece.length > 0) return;
 
-    const maxSifra = karte.length > 0 ? Math.max(...karte.map(k => k.sifra)) : 0;
+    const maxSifra = karte.length > 0
+        ? Math.max(...karte.map(k => Number(k.sifra)))
+        : 0;
 
     for (let i = 1; i <= dogadjaj.brojMjesta; i++) {
         karte.push({
-            sifra: maxSifra + i,
-            dogadjajSifra: dogadjaj.sifra,
+            sifra: String(maxSifra + i),
+            dogadjajSifra: String(dogadjaj.sifra),
             broj: i,
             rezervirano: false,
             rezervacijaSifra: null
@@ -32,14 +36,15 @@ async function generirajZaDogadjaj(dogadjaj) {
 
 async function rezervirajKarte(dogadjajSifra, brojevi, rezervacijaSifra) {
     brojevi.forEach(broj => {
-        const karta = karte.find(k =>
-            k.dogadjajSifra === dogadjajSifra &&
-            k.broj === broj
+        const karta = karte.find(
+            k =>
+                String(k.dogadjajSifra) === String(dogadjajSifra) &&
+                k.broj === broj
         );
 
         if (karta) {
             karta.rezervirano = true;
-            karta.rezervacijaSifra = rezervacijaSifra;
+            karta.rezervacijaSifra = String(rezervacijaSifra);
         }
     });
 
@@ -48,7 +53,7 @@ async function rezervirajKarte(dogadjajSifra, brojevi, rezervacijaSifra) {
 
 async function oslobodiKarte(rezervacijaSifra) {
     karte.forEach(k => {
-        if (k.rezervacijaSifra === parseInt(rezervacijaSifra)) {
+        if (String(k.rezervacijaSifra) === String(rezervacijaSifra)) {
             k.rezervirano = false;
             k.rezervacijaSifra = null;
         }
@@ -59,7 +64,7 @@ async function oslobodiKarte(rezervacijaSifra) {
 
 async function obrisiZaDogadjaj(dogadjajSifra) {
     for (let i = karte.length - 1; i >= 0; i--) {
-        if (karte[i].dogadjajSifra === parseInt(dogadjajSifra)) {
+        if (String(karte[i].dogadjajSifra) === String(dogadjajSifra)) {
             karte.splice(i, 1);
         }
     }

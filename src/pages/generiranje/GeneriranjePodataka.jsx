@@ -129,7 +129,7 @@ export default function GeneriranjePodataka() {
             const dogadjaj = faker.helpers.arrayElement(dogadjaji);
             const korisnik = faker.helpers.arrayElement(korisnici);
 
-            await KartaService.generirajZaDogadjaj(dogadjaj);
+            await KartaService.generirajZaDogadjaj(dogadjaj.sifra);
 
             const sveKarte = (await KartaService.getByDogadjaj(dogadjaj.sifra)).data;
             const slobodne = sveKarte.filter(k => !k.rezervirano);
