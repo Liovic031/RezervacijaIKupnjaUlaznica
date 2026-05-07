@@ -8,7 +8,7 @@ export default function Izbornik() {
   const { isLoggedIn, authUser, logout } = useAuth()
 
   return (
-    <Navbar bg="dark" data-bs-theme="dark" expand="lg" className="mb-3">
+    <Navbar bg="dark" data-bs-theme="dark" expand="lg">
       <Container>
         <Navbar.Brand as={Link} to={RouteNames?.HOME || '/'}>{IME_APLIKACIJE}</Navbar.Brand>
 
