@@ -43,7 +43,8 @@ export default function RezervacijaNova() {
             .filter(k =>
                 !k.rezervirano ||
                 !rezervacije.data.some(r => String(r.sifra) === String(k.rezervacijaSifra))
-            );
+            )
+            .sort((a, b) => Number(a.broj) - Number(b.broj));
 
         setKarte(filtrirane);
     }
@@ -60,11 +61,14 @@ export default function RezervacijaNova() {
         const podaci = new FormData(e.target);
         const objekt = Object.fromEntries(podaci);
 
-        // Pretvorba u brojeve
+        // Firebase → sifre su stringovi
         objekt.korisnikSifra = objekt.korisnik;
         objekt.dogadjajSifra = objekt.dogadjaj;
 
-        // 1) ZOD VALIDACIJA
+        // Brojevi karata → brojevi
+        objekt.brojeviKarata = odabraneKarte.map(Number);
+
+        // ZOD VALIDACIJA
         const rezultat = ShemaRezervacija.safeParse(objekt);
 
         if (!rezultat.success) {
@@ -77,13 +81,7 @@ export default function RezervacijaNova() {
             return;
         }
 
-        // 2) VALIDACIJA KARATA (dinamička)
-        if (odabraneKarte.length === 0) {
-            setErrors(prev => ({ ...prev, karte: "Odaberite barem jednu kartu!" }));
-            return;
-        }
-
-        // 3) Slanje rezervacije
+        // Spremi rezervaciju
         const novaRez = {
             korisnikSifra: rezultat.data.korisnikSifra,
             dogadjajSifra: rezultat.data.dogadjajSifra,
@@ -101,6 +99,7 @@ export default function RezervacijaNova() {
 
         navigate(RouteNames.REZERVACIJE);
     }
+
 
     return (
         <>

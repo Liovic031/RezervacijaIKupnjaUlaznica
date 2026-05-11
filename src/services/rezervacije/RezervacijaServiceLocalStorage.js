@@ -1,4 +1,4 @@
-const STORAGE_KEY = "rezervacije";
+const STORAGE_KEY = "e5.rezervacije";
 import KartaService from "../karte/KartaService";
 
 function dohvatiSveIzStorage() {

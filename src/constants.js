@@ -26,13 +26,13 @@ export const RouteNames = {
 };
 
 // memorija, localstorage, firebase
-export const DATA_SOURCE = 'localstorage';
+export const DATA_SOURCE = localStorage.getItem('dataSource') || 'firebase';
 
 
 export const PrefixStorage = {
-    DOGADJAJI: 'dogadjaji',
-    KORISNICI: 'korisnici',
-    KARTE: 'karte',
-    REZERVACIJE: 'rezervacije',
+    DOGADJAJI: 'e5.dogadjaji',
+    KORISNICI: 'e5.korisnici',
+    KARTE: 'e5.karte',
+    REZERVACIJE: 'e5.rezervacije',
     AUTH_USER: 'auth_user'
 };

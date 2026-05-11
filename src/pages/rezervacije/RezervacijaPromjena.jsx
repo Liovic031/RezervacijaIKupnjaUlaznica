@@ -50,7 +50,9 @@ export default function RezervacijaPromjena() {
                 !k.rezervirano ||
                 k.rezervacijaSifra === rezSifra ||
                 odabraneKarte.includes(k.broj)
-            );
+            )
+            .sort((a, b) => Number(a.broj) - Number(b.broj));
+            
 
         setKarte(filtrirane);
     }
@@ -70,6 +72,9 @@ export default function RezervacijaPromjena() {
 
         objekt.korisnikSifra = objekt.korisnik;
         objekt.dogadjajSifra = objekt.dogadjaj;
+
+        objekt.brojeviKarata = odabraneKarte.map(Number);
+
 
         // 1) ZOD VALIDACIJA
         const rezultat = ShemaRezervacija.safeParse(objekt);

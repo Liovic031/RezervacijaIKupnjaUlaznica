@@ -1,10 +1,12 @@
 import { DotLottieReact } from "@lottiefiles/dotlottie-react";
-import { IME_APLIKACIJE } from "../constants";
+import { DATA_SOURCE, IME_APLIKACIJE } from "../constants";
 import { useEffect, useState } from "react";
 import DogadjajService from "../services/dogadjaji/DogadjajService";
 import KorisnikService from "../services/korisnici/KorisnikService";
 import RezervacijaService from "../services/rezervacije/RezervacijaService";
-import { Card } from "react-bootstrap";
+import { Card, Row, Col } from "react-bootstrap";
+import useAuth from "../hooks/useAuth";
+
 
 export default function Home() {
 
@@ -15,6 +17,13 @@ export default function Home() {
   const [animatedDogadjaji, setAnimatedDogadjaji] = useState(0);
   const [animatedKorisnici, setAnimatedKorisnici] = useState(0);
   const [animatedRezervacije, setAnimatedRezervacije] = useState(0);
+
+  const { isLoggedIn } = useAuth();
+
+  function promijeniIzvor(novi) {
+    localStorage.setItem("dataSource", novi);
+    window.location.reload();
+  }
 
   useEffect(() => {
     const fetchData = async () => {
@@ -98,6 +107,40 @@ export default function Home() {
           style={{ width: 260, height: 260 }}
         />
       </div>
+
+       {isLoggedIn && (
+        <>
+          <hr className="mt-5" />
+
+          <Row className="mb-5">
+            <Col className="text-center">
+              <h5>Izvor podataka:</h5>
+              <div className="btn-group">
+                <button
+                  onClick={() => promijeniIzvor('memorija')}
+                  className={`btn ${DATA_SOURCE === 'memorija' ? 'btn-success' : 'btn-danger'}`}
+                >
+                  Memorija
+                </button>
+
+                <button
+                  onClick={() => promijeniIzvor('localstorage')}
+                  className={`btn ${DATA_SOURCE === 'localstorage' ? 'btn-success' : 'btn-danger'}`}
+                >
+                  Local Storage
+                </button>
+
+                <button
+                  onClick={() => promijeniIzvor('firebase')}
+                  className={`btn ${DATA_SOURCE === 'firebase' ? 'btn-success' : 'btn-danger'}`}
+                >
+                  Firebase
+                </button>
+              </div>
+            </Col>
+          </Row>
+        </>
+        )}
     </>
   );
 }

@@ -1,4 +1,5 @@
 import { DATA_SOURCE } from "../../constants";
+import RezervacijaServiceFireBase from "./RezervacijaServiceFireBase";
 import RezervacijaServiceLocalStorage from "./RezervacijaServiceLocalStorage";
 import RezervacijaServiceMemorija from "./RezervacijaServiceMemorija";
 
@@ -7,6 +8,9 @@ let Servis = null;
 switch (DATA_SOURCE) {
     case "memorija":
         Servis = RezervacijaServiceMemorija;
+        break;
+    case "firebase":
+        Servis = RezervacijaServiceFireBase;
         break;
     case "localstorage":
         Servis = RezervacijaServiceLocalStorage;

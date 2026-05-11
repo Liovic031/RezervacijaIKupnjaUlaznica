@@ -1,12 +1,16 @@
 import { DATA_SOURCE } from "../../constants";
+import DogadjajServiceFireBase from "./DogadjajServiceFireBase";
 import DogadjajServiceLocalStorage from "./DogadjajServiceLocalStorage";
 import DogadjajServiceMemorija from "./DogadjajServiceMemorija";
 
 let Servis = null;
 
-switch(DATA_SOURCE) {
+switch (DATA_SOURCE) {
     case 'memorija':
         Servis = DogadjajServiceMemorija;
+        break;
+    case 'firebase':
+        Servis = DogadjajServiceFireBase;
         break;
     case 'localstorage':
         Servis = DogadjajServiceLocalStorage;
@@ -16,7 +20,7 @@ switch(DATA_SOURCE) {
 }
 
 const PrazanServis = {
-    get: async () => ({ success: false, data: []}),
+    get: async () => ({ success: false, data: [] }),
     getBySifra: async (sifra) => ({ success: false, data: {} }),
     dodaj: async (dogadjaj) => { console.error("Servis nije učitan"); },
     promjeni: async (sifra, dogadjaj) => { console.error("Servis nije učitan"); },

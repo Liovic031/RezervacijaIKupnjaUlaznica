@@ -238,6 +238,7 @@ export default function RezervacijaPregled() {
                                                     const dog = dogadjaji.find(d => String(d.sifra) === String(rez.dogadjajSifra));
                                                     return dog ? k.broj <= dog.brojMjesta : true;
                                                 })
+                                                .sort((a, b) => Number(a.broj) - Number(b.broj))
                                         )}
                                     </div>
                                 </div>

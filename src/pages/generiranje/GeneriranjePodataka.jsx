@@ -15,6 +15,12 @@ import { korisnici as korisniciMem } from "../../services/korisnici/KorisnikPoda
 import { karte as karteMem } from "../../services/karte/KartaPodaci";
 import { rezervacije as rezervacijeMem } from "../../services/rezervacije/RezervacijaPodaci";
 
+import DogadjajServiceFireBase from "../../services/dogadjaji/DogadjajServiceFireBase";
+import KorisnikServiceFireBase from "../../services/korisnici/KorisnikServiceFireBase";
+import KartaServiceFireBase from "../../services/karte/KartaServiceFireBase";
+import RezervacijaServiceFireBase from "../../services/rezervacije/RezervacijaServiceFireBase";
+
+
 // slika
 const defaultSlika = 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAMgAAAEsCAIAAAAJmGvpAAADD0lEQVR4nO3SQQ0AIRDAwOP8C1tZmKAhITMK+uiamQ9O+28H8CZjkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBYJY5EwFgljkTAWCWORMBaJDVgNBLAk8IkcAAAAAElFTkSuQmCC';
 
@@ -94,7 +100,7 @@ export default function GeneriranjePodataka() {
                 lozinka: "Test123!", // svi generirani korisnici imaju istu lozinku
                 datumKreiranja: new Date().toISOString(),
                 uloga: "korisnik",
-                slika: defaultSlika 
+                slika: defaultSlika
             });
         }
     };
@@ -212,6 +218,119 @@ export default function GeneriranjePodataka() {
         }
     };
 
+    // -------------------------------------------------------
+    // PRETAKANJE MEMORIJE → FIREBASE
+    // -------------------------------------------------------
+    const handleMemorijaUFirebase = async () => {
+        if (!window.confirm("Jeste li sigurni da želite pretočiti podatke iz memorije u Firebase?")) {
+            return;
+        }
+
+        setLoading(true);
+        setPoruka(null);
+
+        try {
+            // -----------------------------
+            // 1) KORISNICI → Firebase
+            // -----------------------------
+            let mapKorisnici = [];
+
+            for (const k of korisniciMem) {
+                const { sifra, ...ostatak } = k;
+
+                const fb = await KorisnikServiceFireBase.dodaj({
+                    ...ostatak,
+                    datumKreiranja: ostatak.datumKreiranja
+                });
+
+                mapKorisnici.push({
+                    stara: sifra,
+                    nova: fb.data.sifra
+                });
+            }
+
+
+            // -----------------------------
+            // 2) DOGAĐAJI → Firebase
+            // -----------------------------
+            let mapDogadjaji = [];
+
+            for (const d of dogadjajiMem) {
+                const { sifra, ...ostatak } = d;
+
+                const fb = await DogadjajServiceFireBase.dodaj({
+                    ...ostatak,
+                    datumOdrzavanja: ostatak.datumOdrzavanja
+                });
+
+                mapDogadjaji.push({
+                    stara: sifra,
+                    nova: fb.data.sifra
+                });
+            }
+
+
+
+            // -----------------------------
+            // 3) KARTE → Firebase
+            // -----------------------------
+            let mapKarte = [];
+
+            for (const k of karteMem) {
+                const { sifra, ...ostatak } = k;
+
+                // mapiraj dogadjajSifra
+                const noviDogadjaj = mapDogadjaji.find(m => m.stara === ostatak.dogadjajSifra);
+                ostatak.dogadjajSifra = noviDogadjaj?.nova || null;
+
+                const fb = await KartaServiceFireBase.dodaj(ostatak);
+
+                mapKarte.push({
+                    stara: sifra,
+                    nova: fb.data.sifra
+                });
+            }
+
+
+            // -----------------------------
+            // 4) REZERVACIJE → Firebase
+            // -----------------------------
+            for (const r of rezervacijeMem) {
+                const { sifra, ...ostatak } = r;
+
+                // mapiraj korisnikSifra
+                const noviKorisnik = mapKorisnici.find(m => m.stara === ostatak.korisnikSifra);
+                ostatak.korisnikSifra = noviKorisnik?.nova || null;
+
+                // mapiraj dogadjajSifra
+                const noviDogadjaj = mapDogadjaji.find(m => m.stara === ostatak.dogadjajSifra);
+                ostatak.dogadjajSifra = noviDogadjaj?.nova || null;
+
+                // mapiraj brojeve karata → rezervacijaSifra će se postaviti kasnije
+                const fb = await RezervacijaServiceFireBase.dodaj(ostatak);
+
+                await KartaServiceFireBase.rezervirajKarte(
+                    ostatak.dogadjajSifra,
+                    ostatak.brojeviKarata,
+                    fb.data.sifra
+                );
+            }
+
+            setPoruka({
+                tip: "success",
+                tekst: "Uspješno presipano iz memorije u Firebase!"
+            });
+
+        } catch (err) {
+            console.error("Greška pri presipavanju:", err);
+            setPoruka({
+                tip: "danger",
+                tekst: "Greška pri presipavanju: " + err.message
+            });
+        } finally {
+            setLoading(false);
+        }
+    };
 
     // -------------------------------------------------------
     // BRISANJE SVIH PODATAKA
@@ -311,12 +430,14 @@ export default function GeneriranjePodataka() {
 
                 <Col md={6}>
                     <Button
-                        variant="secondary"
+                        variant="primary"
                         className="w-100 mb-2"
-                        disabled={true}
+                        disabled={loading}
+                        onClick={handleMemorijaUFirebase}
                     >
-                        Iz memorije u Firebase (uskoro)
+                        {loading ? "Pretakanje..." : "Iz memorije u Firebase"}
                     </Button>
+
                 </Col>
             </Row>
 

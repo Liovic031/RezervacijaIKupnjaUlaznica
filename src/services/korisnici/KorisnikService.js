@@ -1,4 +1,5 @@
 import { DATA_SOURCE } from "../../constants";
+import KorisnikServiceFireBase from "./KorisnikServiceFireBase";
 import KorisnikServiceLocalStorage from "./KorisnikServiceLocalStorage";
 import KorisnikServiceMemorija from "./KorisnikServiceMemorija";
 
@@ -7,6 +8,9 @@ let Servis = null;
 switch (DATA_SOURCE) {
     case 'memorija':
         Servis = KorisnikServiceMemorija;
+        break;
+    case 'firebase':
+        Servis = KorisnikServiceFireBase;
         break;
     case 'localstorage':
         Servis = KorisnikServiceLocalStorage;

@@ -77,10 +77,10 @@ async function promjeni(sifra, korisnik) {
 
 // promjena lozinke
 function getKorisnici() {
-  return JSON.parse(localStorage.getItem("korisnici")) || [];
+  return JSON.parse(localStorage.getItem("e5.korisnici")) || [];
 }
 function spremiKorisnike(korisnici) {
-  localStorage.setItem("korisnici", JSON.stringify(korisnici));
+  localStorage.setItem("e5.korisnici", JSON.stringify(korisnici));
 }
 async function promjeniLozinku(sifra, novaLozinka) {
   const korisnici = getKorisnici();
