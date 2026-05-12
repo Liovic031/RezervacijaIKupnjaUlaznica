@@ -1,5 +1,4 @@
 import { collection, doc, getDocs, getDoc, addDoc, updateDoc, deleteDoc, query, where } from "firebase/firestore";
-
 import bcrypt from "bcryptjs";
 import getFirebaseDB from "../Firebase";
 import { PrefixStorage } from "../../constants";

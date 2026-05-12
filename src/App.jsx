@@ -45,21 +45,15 @@ function App() {
 
 
               <Route path={RouteNames.DOGADJAJI || '/dogadjaji'} element={<DogadjajPregled />} />
+              <Route path={RouteNames.KORISNICI || '/korisnici'} element={<KorisnikPregled />} />
+              <Route path={RouteNames.KORISNICI_NOVI || '/korisnici/novi'} element={<KorisnikNovi />} />
+              <Route path={RouteNames.KORISNICI_PROMJENA || '/korisnici/:sifra'} element={<KorisnikPromjena />} />
               {authUser?.uloga === 'admin' && (
                 <>
                   <Route path={RouteNames.DOGADJAJI_NOVI || '/dogadjaji/novi'} element={<DogadjajNovi />} />
                   <Route path={RouteNames.DOGADJAJI_PROMJENA || '/dogadjaji/:sifra'} element={<DogadjajPromjena />} />
                 </>
               )}
-
-              {authUser?.uloga === 'admin' && (
-                <>
-                  <Route path={RouteNames.KORISNICI || '/korisnici'} element={<KorisnikPregled />} />
-                  <Route path={RouteNames.KORISNICI_NOVI || '/korisnici/novi'} element={<KorisnikNovi />} />
-                  <Route path={RouteNames.KORISNICI_PROMJENA || '/korisnici/:sifra'} element={<KorisnikPromjena />} />
-                </>
-              )}
-
               <Route path={RouteNames.REZERVACIJE || '/rezervacije'} element={<RezervacijaPregled />} />
               <Route path={RouteNames.REZERVACIJE_NOVE || '/rezervacije/novi'} element={<RezervacijaNova />} />
               <Route path={RouteNames.REZERVACIJE_PROMJENA || '/rezervacije/:sifra'} element={<RezervacijaPromjena />} />
