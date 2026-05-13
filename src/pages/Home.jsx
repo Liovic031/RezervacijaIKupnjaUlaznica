@@ -1,4 +1,4 @@
-import { DotLottieReact } from "@lottiefiles/dotlottie-react";
+import { DotLottieReact } from '@lottiefiles/dotlottie-react';
 import { DATA_SOURCE, IME_APLIKACIJE } from "../constants";
 import { useEffect, useState } from "react";
 import DogadjajService from "../services/dogadjaji/DogadjajService";
@@ -101,14 +101,15 @@ export default function Home() {
 
       <div style={{ display: "flex", justifyContent: "center", marginTop: 40 }}>
         <DotLottieReact
-          src="/src/assets/animations/ticketblue.lottie"
+          src="/animations/ticketblue.lottie"
           loop
           autoplay
           style={{ width: 260, height: 260 }}
         />
+
       </div>
 
-       {isLoggedIn && (
+      {isLoggedIn && (
         <>
           <hr className="mt-5" />
 
@@ -140,7 +141,7 @@ export default function Home() {
             </Col>
           </Row>
         </>
-        )}
+      )}
     </>
   );
 }
