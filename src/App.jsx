@@ -72,7 +72,9 @@ function App() {
         </Routes>
 
         <hr />
-        <div className='footer'>&copy; Event Booking APP</div>
+        <footer>
+          <div className='footer'>&copy; Event Booking APP</div>
+        </footer>
       </Container>
     </>
   )
