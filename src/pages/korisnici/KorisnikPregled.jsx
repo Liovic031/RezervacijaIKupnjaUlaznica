@@ -39,7 +39,7 @@ export default function KorisnikPregled() {
 
         const broj = await brojRezervacijaKorisnika(sifra);
 
-        let poruka = 'Jeste li sigurni da želite obrisati događaj?';
+        let poruka = 'Jeste li sigurni da želite obrisati korisnika?';
 
         if (broj == 1) {
             poruka = `Ovaj korisnik ima ${broj} rezervaciju. Brisanjem korisnika obrisat će se i njegova rezervacija. Želite li nastaviti?`;
